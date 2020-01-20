@@ -36,15 +36,34 @@ import folium
 import numpy as np
 # import datetime
 
-pd.set_option('display.precision', 2)
 print("All dependencies imported successfully!")
 
 
+__version__ = '0.9.0'
+
+
 class VipDt:
-    """A collection of methods for Foursquare data ETL."""  
+    """
+    A collection of methods for returning venue data for 
+    a given location from the Foursquare Places API.
+
+    Parameters
+    ----------
+    address: str
+      A real address for a particular location
+
+    credentials: dict
+      Key-value pairs for the following credentials: 
+        {
+            "fsid": "Valid Foursquare client Id",  
+            "fssecret" : "Valid Foursquare client secret",  
+            "censuskey" : "Valid US Census API Key"
+        }
+    """ 
     
     def __init__(self, address, credentials):
         """Initializes class object parameters."""
+        pd.set_option('display.precision', 2)
         self.ADDRESS = str(address)
         self.CREDENTIALS = credentials
         try:
