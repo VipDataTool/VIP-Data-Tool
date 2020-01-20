@@ -535,6 +535,7 @@ class VipDt:
 
     @staticmethod
     def start(address=None, credentials=None):
+        """A method for automatically populating an instance with data."""
         if address is None:
             address = input("Enter address here:") 
         if credentials is None:
@@ -552,13 +553,13 @@ class VipDt:
                     client.getMenus()
                     client.setMenusDf()
                     client.getMenuStats()
-                    client.setPickle()
-                    try:
-                        ## REPORTS
-                        client.stats2Excel()
-                    except:
-                        print('Report failed!')
-                        pass
+                    # client.setPickle()
+                    # try:
+                    #     ## REPORTS
+                    #     client.stats2Excel()
+                    # except:
+                    #     print('Report failed!')
+                    #     pass
                     print("Procedure complete!")
                     return #client.FS_SUMMARIES
                 except:
