@@ -6,7 +6,7 @@ PURPOSE:
 LISTEN UP CHUMPS- I'M VERY IMPORTANT. MY TIME IS VALUABLE. I'M A BIG DEAL! So when I deserve data, I demand data! That's why I made this very superior, very important data tool for me and my bro's to use when looking for new clubs and gyms and stuff to totally dominate...  
   
 DESCRIPTION:  
-V.I.P. stands for "Venues in Places" referring to the Foursquare 'Places' API provided by Foursquare. A description of the endpoint can be found here: <https://developer.foursquare.com/docs/api>  
+V.I.P. stands for "Venues in Places" referring to the Foursquare 'Places' API. A description of the endpoint can be found here: <https://developer.foursquare.com/docs/api>  
   
 This module is essentially just a wrapper for the Python library referenced here: <https://developer.foursquare.com/docs/api/libraries>  
   
