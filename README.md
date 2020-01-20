@@ -2,11 +2,11 @@
 
 A Very Important Data Tool For Very Important Data Tools!
 
-PURPOSE:
+PURPOSE:  
 LISTEN UP CHUMPS- I'M VERY IMPORTANT. MY TIME IS VALUABLE. I'M A BIG DEAL! So when I deserve data, I demand data! That's why I made this very superior, very important data tool for me and my bro's to use when looking for new clubs and gyms and stuff to totally dominate...  
   
 DESCRIPTION:  
-V.I.P. stands for "Venues in Places" referring to the Foursquare 'Places' API provided by Foursquare. A description of the endpoint can be found here: <https://developer.foursquare.com/docs/api>  
+V.I.P. stands for "Venues in Places" referring to the Foursquare 'Places' API. A description of the endpoint can be found here: <https://developer.foursquare.com/docs/api>  
   
 This module is essentially just a wrapper for the Python library referenced here: <https://developer.foursquare.com/docs/api/libraries>  
   
@@ -41,7 +41,7 @@ VipDt.setPickle()
 VipDt.getPickle()  
 VipDt.start() # Essentially batch performs a collection of the above methods  
   
-I included a simple method titled 'getFileTokens()' for storing the credentials as string values in a text document titled "certificate" located in the directory of the script, however this method is far from a secure means of storing one's user credentials, and therefore should only be used as a short-term solution in a secure environment. Be sure to '.gitignore' this file as well to avoid publishing your private API credentials on a public repository.
+I also included a simple static method titled 'VipDt.getFileTokens()' for retrieving one's credentials from a text document titled "certificate" located in the directory of the script. This method is far from a secure means of storing one's user credentials, and only intended to be used as a very short-term solution in a secure environment. Be sure to '.gitignore' this file if you intend to use this method as to avoid publishing your private API credentials on a public repository.
   
 CONCLUSION:  
 I thank me for my time and effort! Special thanks to my crew for the extra creatine and spray tans.
