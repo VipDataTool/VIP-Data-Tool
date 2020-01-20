@@ -269,6 +269,7 @@ class VipDt:
         return responses
     
     def getMenus(self,venues=None):
+        """A method for returning raw menu data."""
         if venues is None:
             venues_dict = self.FS_JSON['VENUES']
         client = foursquare.Foursquare(client_id = self.CREDENTIALS['fsid'], 
@@ -294,6 +295,7 @@ class VipDt:
         return menus
 
     def setMenusDf(self, records=None, drop_na=False, iter_limit=None):
+        """A method for extracting a dataframe from 'MENUS' json."""
         if records is None:
             records = self.FS_JSON['MENUS']
         bulk_items = []
@@ -329,7 +331,6 @@ class VipDt:
                                         'item_desc': item_desc,
                                         'item_price' : item_price
                                     }]
-
                             else:
                                 # print("NO ITEMS IN SECTION", section_name)
                                 pass
@@ -358,6 +359,7 @@ class VipDt:
             pass
 
     def getVenuesMap(self, save_map=True):
+        """A method for creating a Folium map from 'VENUES' json."""
         venue_data = self.FS_JSON['VENUES']
         search_address = self.LOCATION_DATA['json']['result']['addressMatches'][0]['matchedAddress']
         search_lat = self.LOCATION_DATA['json']['result']['addressMatches'][0]['coordinates']['y']
@@ -401,7 +403,7 @@ class VipDt:
         return m
 
     def setVenuesDf(self):
-        """A method for returning a dataframe of local venues approximate to the 'target address'."""
+        """A method for extracting a dataframe of local venues from 'VENUES' json."""
         json = self.FS_JSON['VENUES']
         venue_list = []
         for category in json:
@@ -435,7 +437,7 @@ class VipDt:
         return df
     
     def getMenuStats(self, menus=None, confidence=0.99):
-        """Returns a dictionary of dataframes for descriptive analyses."""
+        """Returns a dictionary of dataframes with descriptive 'price' analyses."""
         menu_df = self.FS_SUMMARIES['MENUS']
         if menus is not None:
             menu_df = menus
@@ -511,6 +513,7 @@ class VipDt:
         return payload
 
     def stats2Excel(self, sheets=None):
+        """A method for exporting instance data as a spreadsheet."""
         if sheets is None:
             sheets = self.FS_SUMMARIES['STATS']
         sheet_file_name = self.OUTPUT_LABELS['xlLabel']
@@ -569,14 +572,7 @@ class VipDt:
             pass
 
 
-
-# VipDt.start()
-
-# instance.FS_SUMMARIES['MENUS'].hist(bins=100)
-# a1.FS_SUMMARIES['MENUS'].describe()
-# a1.FS_SUMMARIES['STATS']['menu_desc']
-# a1.FS_SUMMARIES['VENUES']
-
+## DIFFERENT ADDRESSES FOR TESTING OUTPUT
 # a1 = VipDt("48 main st, Northport, NY", creds)
 # a2 = VipDt("211 main st., port jefferson, NY", creds)
 # a3 = VipDt("1048 5th Ave, New York, NY 10028", creds)
@@ -584,3 +580,9 @@ class VipDt:
 # a5 = VipDt("6302 E 11th St, Tulsa, OK 74112", creds)
 # a6 = VipDt("148 Co Rd 23, Harrisville, NY 13648", creds)
 # a7 = VipDt("62 Bowerfold Ln, Stockport, UK",creds)
+
+## EXAMPLES OF ACCESSING POST-QUERY DATA
+# instance.FS_SUMMARIES['MENUS'].hist(bins=100)
+# a1.FS_SUMMARIES['MENUS'].describe()
+# a2.FS_SUMMARIES['STATS']['menu_desc']
+# a3.FS_SUMMARIES['VENUES']
