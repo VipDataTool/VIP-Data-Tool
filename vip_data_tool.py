@@ -96,6 +96,14 @@ class VipDt:
 
     @staticmethod
     def getFileTokens(filename='certificate'):
+        """A simple method for returning a dictionary of credentials 
+        from a local text file.
+        
+        Parameters
+        ----------
+        filename: str
+         the name of the file where key values are stored
+        """
         # WOULD SWITCH THIS ALL TO CSV FORMAT INSTEAD
         credsfname = filename
         path = Path.cwd() / credsfname
@@ -117,20 +125,25 @@ class VipDt:
         return geolocator.geocode(ll, addressdetails=True)    
         
     def getCensusGeo(self,
-                     parameters={
-                         'base_url':
-                         "https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress?",
+                     options={
                          'benchmark':"Public_AR_Census2010",
                          'vintage':"Census2010_Census2010",
                          'layers':"08", 
-                         'format':"json", 
-                         'key': ""}):
-        """Returns geo data from the US Census Bureau for a given address."""
+                         'format':"json"}):
+        """
+        Returns geo data from the US Census Bureau for a given address.
+
+        Parameters
+        ----------
+        options: dict
+         contents include base parameters for accessing the US CENSUS BUREAU API
+         at an endpoint hard coded into the method for security purposes.
+        """
         _address = str(self.ADDRESS)
-        _benchmark = str(parameters['benchmark'])
-        _vintage = str(parameters['vintage'])
-        _layers = str(parameters['layers'])
-        _format = str(parameters['format'])
+        _benchmark = str(options['benchmark'])
+        _vintage = str(options['vintage'])
+        _layers = str(options['layers'])
+        _format = str(options['format'])
         _key = self.CREDENTIALS['censuskey']
         base_url = "https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress?"
         params = ("address={}&benchmark={}&vintage={}&layers={}&format={}&key={}").format(
@@ -138,7 +151,7 @@ class VipDt:
         api_url = ("{}{}").format(base_url, params)
         response = requests.get(api_url)
         json = response.json()
-        return {"json": json, "status": str(response)}
+        return {"json": json, "status": str(response.status_code)}
     
     def getTractValues(self):
         "Returns US Census data."
@@ -243,7 +256,26 @@ class VipDt:
                   intent="browse", limit=50, 
                   categories=['4d4b7105d754a06376d81259', 
                               '4d4b7105d754a06374d81259']):
-        """Method for returning raw venue data for location 'ADDRESS'."""
+        """
+        Method for returning raw venue data for location 'ADDRESS'.
+
+        Parameters
+        ----------
+        latlng: str
+         latitude,longitude as comma-separated string values
+        query: str
+         a value to filter results
+        radius: float, int
+         a search radius in meters
+        intent: str
+         "browse" by default. 
+        limit: int
+         the limit of responses, 1-50 max
+        categories: list
+         a list of category string values to filter or expand results
+
+        See Foursquare API docs for more details.
+        """
         client = foursquare.Foursquare(client_id = self.CREDENTIALS['fsid'], 
                                        client_secret = self.CREDENTIALS['fssecret'])
         if radius is None:
@@ -269,7 +301,14 @@ class VipDt:
         return responses
     
     def getMenus(self,venues=None):
-        """A method for returning raw menu data."""
+        """
+        A method for returning raw menu data.
+
+        Parameters
+        ----------
+        venues: list
+         a list of venue id numbers to query for menu data
+        """
         if venues is None:
             venues_dict = self.FS_JSON['VENUES']
         client = foursquare.Foursquare(client_id = self.CREDENTIALS['fsid'], 
@@ -295,7 +334,18 @@ class VipDt:
         return menus
 
     def setMenusDf(self, records=None, drop_na=False, iter_limit=None):
-        """A method for extracting a dataframe from 'MENUS' json."""
+        """
+        A method for extracting a dataframe from 'MENUS' json.
+
+        Parameters
+        ----------
+        records: list
+         a list of menu query responses
+        drop_na: bool
+         indicates whether to drop NoneTypes from dataframe, False by default 
+        iter_limit: int
+         the number of maximum observations per dataframe
+        """
         if records is None:
             records = self.FS_JSON['MENUS']
         bulk_items = []
@@ -359,7 +409,14 @@ class VipDt:
             pass
 
     def getVenuesMap(self, save_map=True):
-        """A method for creating a Folium map from 'VENUES' json."""
+        """
+        A method for creating a Folium map from 'VENUES' json
+
+        Parameters
+        ----------
+        save_map: bool
+         indicates whether to save a venue location map as html
+        """
         venue_data = self.FS_JSON['VENUES']
         search_address = self.LOCATION_DATA['json']['result']['addressMatches'][0]['matchedAddress']
         search_lat = self.LOCATION_DATA['json']['result']['addressMatches'][0]['coordinates']['y']
@@ -437,7 +494,16 @@ class VipDt:
         return df
     
     def getMenuStats(self, menus=None, confidence=0.99):
-        """Returns a dictionary of dataframes with descriptive 'price' analyses."""
+        """
+        Returns a dictionary of dataframes with descriptive 'price' analyses.
+
+        Parameters
+        ----------
+        menus: list
+         a list of menu query json responses
+        confidence: float
+         a confidence decimal value between >0 and <1 for the "bayes_mvs" bootstrap method
+        """
         menu_df = self.FS_SUMMARIES['MENUS']
         if menus is not None:
             menu_df = menus
@@ -458,7 +524,14 @@ class VipDt:
         return menuStats
 
     def setPickle(self, pickle_name='instance.pickle'):
-        """Method for serializing the current instance. LESS SECURE THAN JSON."""
+        """
+        Method for serializing the current instance. LESS SECURE THAN JSON.
+        
+        Parameters
+        ----------
+        pickle_name: str
+         a file name for the pickled instance
+        """
         try:
             # pickleName = self.pickleName
             self.FS_SUMMARIES['MAP'] = None  # Cuz cannot serialize folium map objects.
@@ -473,7 +546,14 @@ class VipDt:
             return
 
     def setJson(self, jsonName = 'FS_JSON.json'):
-        """A method for serializing data from the current instance."""
+        """
+        A method for serializing data from the current instance.
+        
+        Parameters
+        ----------
+        jsonName: str
+         a file name for storing json objects
+        """
         data = self.FS_JSON
         with open(jsonName, "w") as f:
             json.dump(data, f)
@@ -483,7 +563,14 @@ class VipDt:
 
     @staticmethod
     def getPickle(file_name='instance.pickle'):
-        """Method for deserializing an instance. LESS SECURE THAN JSON."""
+        """
+        Method for deserializing an instance. LESS SECURE THAN JSON.
+        
+        Parameters
+        ----------
+        file_name: str
+         a file name for retrieving pickled objects. 'instance.pickle' by default.
+        """
         pickleName = file_name
         try:
             with open(pickleName, 'rb') as f:
@@ -496,8 +583,15 @@ class VipDt:
             traceback.print_exc()
             return
 
-    def getJson(self, file_name=None):
-        """A method for reconstituting previously serialized JSON data."""
+    def getJson(self, file_name='FS_JSON.json'):
+        """
+        A method for reconstituting previously serialized JSON data. 'FS_JSON.json' by default.
+
+        Parameters
+        ----------
+        file_name: str
+         a file name for retrieving json objects.
+        """
         jsonName = file_name
         with open(jsonName, "r") as f:
             data = f.read()
@@ -513,7 +607,14 @@ class VipDt:
         return payload
 
     def stats2Excel(self, sheets=None):
-        """A method for exporting instance data as a spreadsheet."""
+        """
+        A method for exporting instance data as a spreadsheet.
+        
+        Parameters
+        ----------
+        sheets: dict
+         a dict of dataframe objects from 'FS_SUMMARIES['STATS']'.
+        """
         if sheets is None:
             sheets = self.FS_SUMMARIES['STATS']
         sheet_file_name = self.OUTPUT_LABELS['xlLabel']
@@ -535,7 +636,21 @@ class VipDt:
 
     @staticmethod
     def start(address=None, credentials=None):
-        """A method for automatically populating an instance with data."""
+        """
+        A method for automatically populating an instance with data.
+        
+        Parameters
+        ----------
+        address: str
+          A real address for a particular location
+        credentials: dict
+          Key-value pairs for the following credentials: 
+        {
+            "fsid": "Valid Foursquare client Id",  
+            "fssecret" : "Valid Foursquare client secret",  
+            "censuskey" : "Valid US Census API Key"
+        }
+        """
         if address is None:
             address = input("Enter address here:") 
         if credentials is None:
@@ -561,7 +676,7 @@ class VipDt:
                     #     print('Report failed!')
                     #     pass
                     print("Procedure complete!")
-                    return #client.FS_SUMMARIES
+                    # return #client.FS_SUMMARIES
                 except:
                     print('Menus failed!')
                     pass
@@ -571,16 +686,6 @@ class VipDt:
         except:
             print('Initialization failed! Procedure aborted.')
             pass
-
-
-## DIFFERENT ADDRESSES FOR TESTING OUTPUT
-# a1 = VipDt("48 main st, Northport, NY", creds)
-# a2 = VipDt("211 main st., port jefferson, NY", creds)
-# a3 = VipDt("1048 5th Ave, New York, NY 10028", creds)
-# a4 = VipDt("88 monroe st, saratoga springs, ny", creds)
-# a5 = VipDt("6302 E 11th St, Tulsa, OK 74112", creds)
-# a6 = VipDt("148 Co Rd 23, Harrisville, NY 13648", creds)
-# a7 = VipDt("62 Bowerfold Ln, Stockport, UK",creds)
 
 ## EXAMPLES OF ACCESSING POST-QUERY DATA
 # instance.FS_SUMMARIES['MENUS'].hist(bins=100)
