@@ -45,7 +45,7 @@ __version__ = '0.9.0'
 class VipDt:
     """
     A collection of methods for returning venue data for 
-    a given location from the Foursquare Places API.
+    a given address from the Foursquare Places API.
 
     Parameters
     ----------
