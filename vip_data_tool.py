@@ -523,7 +523,7 @@ class VipDt:
         self.FS_SUMMARIES['STATS'] = menuStats
         return menuStats
 
-    def setPickle(self, pickle_name='instance.pickle'):
+    def setPickle(self):
         """
         Method for serializing the current instance. LESS SECURE THAN JSON.
         
@@ -533,7 +533,7 @@ class VipDt:
          a file name for the pickled instance
         """
         try:
-            # pickleName = self.pickleName
+            pickle_name = self.OUTPUT_LABELS['pickleLabel']
             self.FS_SUMMARIES['MAP'] = None  # Cuz cannot serialize folium map objects.
             with open(pickle_name, 'wb') as f:
                 pickle.dump(self, f)
@@ -545,7 +545,7 @@ class VipDt:
             traceback.print_exc()
             return
 
-    def setJson(self, jsonName = 'FS_JSON.json'):
+    def setJson(self):
         """
         A method for serializing data from the current instance.
         
@@ -554,6 +554,7 @@ class VipDt:
         jsonName: str
          a file name for storing json objects
         """
+        jsonName = self.OUTPUT_LABELS['jsonLabel']
         data = self.FS_JSON
         with open(jsonName, "w") as f:
             json.dump(data, f)
@@ -562,7 +563,7 @@ class VipDt:
         return data   
 
     @staticmethod
-    def getPickle(file_name='instance.pickle'):
+    def getPickle(file_name):
         """
         Method for deserializing an instance. LESS SECURE THAN JSON.
         
@@ -583,7 +584,7 @@ class VipDt:
             traceback.print_exc()
             return
 
-    def getJson(self, file_name='FS_JSON.json'):
+    def getJson(self, file_name):
         """
         A method for reconstituting previously serialized JSON data. 'FS_JSON.json' by default.
 
