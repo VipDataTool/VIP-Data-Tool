@@ -72,7 +72,7 @@ class VipDt:
             self.LOCATION_DATA['TRACT'] = VipDt.getRadius(self)
         except:
             self.LOCATION_DATA = VipDt.getGeopyGeo(self)
-            self.LOCATION_DATA['TRACT'] = {'RADIUS': 4250}
+            self.LOCATION_DATA['TRACT']['RADIUS']= 4250
         self.FS_JSON = {
             'VENUES' : None,
             'MENUS' : None,
@@ -371,7 +371,7 @@ class VipDt:
                                         item_desc = None
                                     try:
                                         item_price = float(item['price'])
-                                    except (KeyError, TypeError):
+                                    except (KeyError, ValueError):
                                         item_price = None
                                     bulk_items += [{
                                         'venue_name': key,
