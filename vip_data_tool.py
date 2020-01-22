@@ -662,7 +662,7 @@ class VipDt:
                     client.setPickle()
                     print("Procedure complete!")
                 except:
-                    print('Menus failed!')
+                    print('Menus failed! Procedure incomplete.')
                     pass
             except:
                 print('Venues failed!')
