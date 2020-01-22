@@ -642,7 +642,7 @@ class VipDt:
         if address is None:
             address = input("Enter address here:") 
         if credentials is None:
-            credentials = VipDt.getFileTokens()
+            credentials = VipDt.getJsonTokens()
         try:
             ## INITIALIZATION
             client = VipDt(address, credentials)
