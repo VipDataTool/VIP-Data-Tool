@@ -659,7 +659,7 @@ class VipDt:
                     client.getMenus()
                     client.setMenusDf()
                     client.getMenuStats()
-                    # client.setPickle()
+                    client.setPickle()
                     print("Procedure complete!")
                 except:
                     print('Menus failed!')
