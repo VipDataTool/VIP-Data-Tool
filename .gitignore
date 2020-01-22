@@ -28,10 +28,23 @@ certificate
 credentials
 credential
 
-
 # Jupyter Notebooks
 *.ipynb
 
 # Serialized data
 *.pickle
 *.json
+
+# Web content
+*.html
+*.htm
+
+# Document types
+*.xlsx
+*.xls
+*.docx
+*.doc
+*.pdf
+
+# Pycache files
+*.pyc

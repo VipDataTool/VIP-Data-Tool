@@ -28,16 +28,12 @@ import censusdata
 import pickle
 import json
 from pathlib import Path
-from geopy.geocoders import Nominatim
 import pandas as pd 
 import scipy.stats
 import requests
 import folium
 import numpy as np
-# import datetime
-
-print("All dependencies imported successfully!")
-
+print("Dependencies imported.")
 
 __version__ = '0.9.0'
 
@@ -66,13 +62,9 @@ class VipDt:
         pd.set_option('display.precision', 2)
         self.ADDRESS = str(address)
         self.CREDENTIALS = credentials
-        try:
-            self.LOCATION_DATA = VipDt.getCensusGeo(self)
-            self.CENSUS_DATA = VipDt.getTractValues(self)
-            self.LOCATION_DATA['TRACT'] = VipDt.getRadius(self)
-        except:
-            self.LOCATION_DATA = VipDt.getGeopyGeo(self)
-            self.LOCATION_DATA['TRACT']['RADIUS']= 4250
+        self.LOCATION_DATA = VipDt.getCensusGeo(self)
+        self.CENSUS_DATA = VipDt.getTractValues(self)
+        self.LOCATION_DATA['TRACT'] = VipDt.getRadius(self)
         self.FS_JSON = {
             'VENUES' : None,
             'MENUS' : None,
@@ -96,15 +88,15 @@ class VipDt:
 
     @staticmethod
     def getFileTokens(filename='certificate'):
-        """A simple method for returning a dictionary of credentials 
-        from a local text file.
+        """A VERY simple method for returning a dictionary of credentials 
+        from values in a local text file.
         
         Parameters
         ----------
         filename: str
          the name of the file where key values are stored
         """
-        # WOULD SWITCH THIS ALL TO CSV FORMAT INSTEAD
+        # COULD SWITCH THIS ALL TO CSV OR JSON FORMAT FOR BETTER STRUCTURE
         credsfname = filename
         path = Path.cwd() / credsfname
         with path.open() as f:
@@ -114,15 +106,6 @@ class VipDt:
             censuskey = f.readline(42)
         f.close()
         return {"fsid": fsid[:-1], "fssecret": fssecret[:-1], 'censuskey': censuskey}
-    
-    def getGeopyGeo(self, agent="foursquare app"):
-        """Returns a dict of geolocation data for the 'target address'."""
-        geolocator = Nominatim(user_agent=agent)
-        address = str(self.ADDRESS)
-        location = geolocator.geocode(address, addressdetails=True)
-        ll = ("{},{}").format(str(location.latitude), 
-                              str(location.longitude))
-        return geolocator.geocode(ll, addressdetails=True)    
         
     def getCensusGeo(self,
                      options={
@@ -508,8 +491,7 @@ class VipDt:
         if menus is not None:
             menu_df = menus
         menu_data = menu_df[
-            ['venue_name', 'menu_name', 'section_name', 'item_name', 'item_desc', 
-            'item_price']
+            ['venue_name', 'menu_name', 'section_name', 'item_name', 'item_desc', 'item_price']
             ]
         # menu_data['item_price'] = menu_data['item_price'].astype('float64')
         menu_data = menu_data.dropna()
