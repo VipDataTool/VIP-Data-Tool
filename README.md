@@ -41,7 +41,7 @@ VipDt.setPickle()
 VipDt.getPickle()  
 VipDt.start() # Essentially batch performs a collection of the above methods  
   
-I also included a simple static method titled 'VipDt.getFileTokens()' for retrieving one's credentials from a text document titled "certificate" located in the directory of the script. This method is far from a secure means of storing one's user credentials, and only intended to be used as a very short-term solution in a secure environment. Be sure to '.gitignore' this file if you intend to use this method as to avoid publishing your private API credentials on a public repository.
+I also included a simple static method titled 'VipDt.getJsonTokens()' for retrieving one's credentials from a json document titled "certificate" located in the directory of the script. This method is far from a secure means of storing one's user credentials, and only intended to be used as a very short-term solution in a secure environment. Be sure to '.gitignore' this file if you intend to use this method as to avoid publishing your private API credentials on a public repository.
   
 CONCLUSION:  
 I thank me for my time and effort! Special thanks to my crew for the extra creatine and spray tans.
