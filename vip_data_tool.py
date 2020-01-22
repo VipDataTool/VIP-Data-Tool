@@ -88,7 +88,8 @@ class VipDt:
 
     @staticmethod
     def getFileTokens(filename='certificate'):
-        """A VERY simple method for returning a dictionary of credentials 
+        """
+        A VERY simple method for returning a dictionary of credentials 
         from values in a local text file.
         
         Parameters
@@ -259,8 +260,9 @@ class VipDt:
 
         See Foursquare API docs for more details.
         """
-        client = foursquare.Foursquare(client_id = self.CREDENTIALS['fsid'], 
-                                       client_secret = self.CREDENTIALS['fssecret'])
+        client = foursquare.Foursquare(
+            client_id = self.CREDENTIALS['fsid'], 
+            client_secret = self.CREDENTIALS['fssecret'])
         if radius is None:
             radius = self.LOCATION_DATA['TRACT']['RADIUS']
         if latlng is None:
@@ -294,8 +296,9 @@ class VipDt:
         """
         if venues is None:
             venues_dict = self.FS_JSON['VENUES']
-        client = foursquare.Foursquare(client_id = self.CREDENTIALS['fsid'], 
-                                       client_secret = self.CREDENTIALS['fssecret'])
+        client = foursquare.Foursquare(
+            client_id = self.CREDENTIALS['fsid'], 
+            client_secret = self.CREDENTIALS['fssecret'])
         unique_ids = []
         menus = {}
         try:
@@ -406,7 +409,8 @@ class VipDt:
         search_lng = self.LOCATION_DATA['json']['result']['addressMatches'][0]['coordinates']['x']
         search_coords = (search_lat,search_lng)
         m = folium.Map(
-            name="Venue Locations", location=search_coords, zoom_start=12, control_scale=True)
+            name="Venue Locations", location=search_coords, 
+            zoom_start=12, control_scale=True)
         folium.CircleMarker(
             search_coords, popup = search_address, tooltip = search_address).add_to(m)
         for category in venue_data:
@@ -472,7 +476,10 @@ class VipDt:
                 }]
         df = pd.DataFrame.from_records(
             venue_list, index=None, exclude=None, coerce_float=False, 
-            columns=['venue_name','category_idn', 'venue_address', 'venue_lat', 'venue_lng'])
+            columns=[
+                'venue_name','category_idn', 'venue_address', 
+                'venue_lat', 'venue_lng'
+                ])
         self.FS_SUMMARIES['VENUES'] = df
         return df
     
@@ -485,14 +492,15 @@ class VipDt:
         menus: list
          a list of menu query json responses
         confidence: float
-         a confidence decimal value between >0 and <1 for the "bayes_mvs" bootstrap method
+         a confidence interval between 0 and 1 for 'bayes_mvs' method.
         """
         menu_df = self.FS_SUMMARIES['MENUS']
         if menus is not None:
             menu_df = menus
         menu_data = menu_df[
-            ['venue_name', 'menu_name', 'section_name', 'item_name', 'item_desc', 'item_price']
-            ]
+            ['venue_name', 'menu_name', 'section_name', 
+            'item_name', 'item_desc', 'item_price']
+        ]
         # menu_data['item_price'] = menu_data['item_price'].astype('float64')
         menu_data = menu_data.dropna()
         menu_desc = menu_data.groupby(['menu_name']).describe()
@@ -652,14 +660,7 @@ class VipDt:
                     client.setMenusDf()
                     client.getMenuStats()
                     # client.setPickle()
-                    # try:
-                    #     ## REPORTS
-                    #     client.stats2Excel()
-                    # except:
-                    #     print('Report failed!')
-                    #     pass
                     print("Procedure complete!")
-                    # return #client.FS_SUMMARIES
                 except:
                     print('Menus failed!')
                     pass
@@ -670,7 +671,7 @@ class VipDt:
             print('Initialization failed! Procedure aborted.')
             pass
 
-## EXAMPLES OF ACCESSING POST-QUERY DATA
+## EXAMPLES OF INTERACTING POST-QUERY DATA
 # instance.FS_SUMMARIES['MENUS'].hist(bins=100)
 # a1.FS_SUMMARIES['MENUS'].describe()
 # a2.FS_SUMMARIES['STATS']['menu_desc']
