@@ -87,27 +87,24 @@ class VipDt:
     
 
     @staticmethod
-    def getFileTokens(filename='certificate'):
+    def getJsonTokens(file_name="credentials.json"):
         """
-        A VERY simple method for returning a dictionary of credentials 
-        from values in a local text file.
-        
+        A method for reconstituting previously serialized JSON data. 'FS_JSON.json' by default.
+
         Parameters
         ----------
-        filename: str
-         the name of the file where key values are stored
+        file_name: str
+         a json file name for retrieving credentials.
         """
-        # COULD SWITCH THIS ALL TO CSV OR JSON FORMAT FOR BETTER STRUCTURE
-        credsfname = filename
-        path = Path.cwd() / credsfname
-        with path.open() as f:
-            # Adding then removing '/n' chars per line for each key except the last.
-            fsid = f.readline(50)  
-            fssecret = f.readline(50)
-            censuskey = f.readline(42)
-        f.close()
-        return {"fsid": fsid[:-1], "fssecret": fssecret[:-1], 'censuskey': censuskey}
-        
+        jsonName = file_name
+        with open(jsonName,"r") as f:
+            data = json.load(f)
+        # with open(jsonName, "r") as f:
+        #     data = f.read()
+            f.close()
+            print(jsonName, "found!")
+        return data
+
     def getCensusGeo(self,
                      options={
                          'benchmark':"Public_AR_Census2010",
@@ -524,7 +521,7 @@ class VipDt:
         """
         try:
             pickle_name = self.OUTPUT_LABELS['pickleLabel']
-            self.FS_SUMMARIES['MAP'] = None  # Cuz cannot serialize folium map objects.
+            self.FS_SUMMARIES['MAP'] = None  # Cuz cannot serialize folium objects.
             with open(pickle_name, 'wb') as f:
                 pickle.dump(self, f)
             f.close()
@@ -670,6 +667,7 @@ class VipDt:
         except:
             print('Initialization failed! Procedure aborted.')
             pass
+
 
 ## EXAMPLES OF INTERACTING POST-QUERY DATA
 # instance.FS_SUMMARIES['MENUS'].hist(bins=100)
