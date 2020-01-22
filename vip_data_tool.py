@@ -67,7 +67,7 @@ class VipDt:
         self.LOCATION_DATA['TRACT'] = VipDt.getRadius(self)
         self.FS_JSON = {
             'VENUES' : None,
-            'MENUS' : None,
+            'MENUS' : None
         }
         self.FS_SUMMARIES = {
             'VENUES' : pd.DataFrame(data={'test venues 1': [1, 2], 
