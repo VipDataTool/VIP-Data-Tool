@@ -657,6 +657,7 @@ class VipDt:
                     client.setMenusDf()
                     client.getMenuStats()
                     client.setPickle()
+                    client.setJson()
                     print("Procedure complete!")
                 except:
                     print('Menus failed! Procedure incomplete.')
