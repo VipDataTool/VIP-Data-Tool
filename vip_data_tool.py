@@ -70,6 +70,11 @@ class VipDt:
         """
         Initializes class object parameters.
         """
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> b9a1376373b4db21127aaa0645703ac597de5020
         self.ADDRESS = str(address)
         self.CREDENTIALS = credentials
         self.LOCATION_DATA = VipDt.getCensusGeo(self)
@@ -230,7 +235,11 @@ class VipDt:
             radius = 1000.00
         else: 
             radius = fsRadius
+<<<<<<< HEAD
         TRACT_DATA["AVG_INCOME"] = AVG_INCOME
+=======
+        TRACT_DATA["AVG INCOME"] = AVG_INCOME
+>>>>>>> b9a1376373b4db21127aaa0645703ac597de5020
         TRACT_DATA["RADIUS"] = radius
         print("Search radius:", radius)
         return TRACT_DATA
