@@ -70,11 +70,6 @@ class VipDt:
         """
         Initializes class object parameters.
         """
-<<<<<<< HEAD
-=======
-
-
->>>>>>> b9a1376373b4db21127aaa0645703ac597de5020
         self.ADDRESS = str(address)
         self.CREDENTIALS = credentials
         self.LOCATION_DATA = VipDt.getCensusGeo(self)
