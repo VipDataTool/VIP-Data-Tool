@@ -51,33 +51,38 @@ class VipDt:
     credentials: dict
       Key-value pairs for the following credentials: 
         {
-            "fsid": "Valid Foursquare client Id",  
-            "fssecret" : "Valid Foursquare client secret",  
+            "fsid": "Valid Foursquare Client Id",  
+            "fssecret" : "Valid Foursquare Client Secret",  
             "censuskey" : "Valid US Census API Key"
         }
     """ 
     
     def __init__(self, address, credentials):
-        """Initializes class object parameters."""
+        """
+        Initializes class object parameters.
+        """
         pd.set_option('display.precision', 2)
+        pd.set_option('display.max_rows', 500)
+        pd.set_option('display.max_columns', 20)
+        pd.set_option('display.width', 150)
+
         self.ADDRESS = str(address)
         self.CREDENTIALS = credentials
         self.LOCATION_DATA = VipDt.getCensusGeo(self)
-        self.CENSUS_DATA = VipDt.getTractValues(self)
-        self.LOCATION_DATA['TRACT'] = VipDt.getRadius(self)
+        self.TRACT_DATA = VipDt.getTractValues(self)
+
         self.FS_JSON = {
             'VENUES' : None,
             'MENUS' : None
         }
+
         self.FS_SUMMARIES = {
-            'VENUES' : pd.DataFrame(data={'test venues 1': [1, 2], 
-                                          'test venues 2': [3, 4]}),
-            'MENUS' : pd.DataFrame(data={'test menus 1': [5, 6], 
-                                         'test menus 2': [7, 8]}),
-            'STATS' : pd.DataFrame(data={'test stats 1': [9, 10], 
-                                              'test stats 2': [11, 12]}),
+            'VENUES' : None,
+            'MENUS' : None,
+            'STATS' : None,
             'MAP' : None
         }
+
         self.OUTPUT_LABELS = {
             'pickleLabel' : ("{}.pickle").format(self.ADDRESS),
             'jsonLabel' : ("{}.json").format(self.ADDRESS),
@@ -99,8 +104,6 @@ class VipDt:
         jsonName = file_name
         with open(jsonName,"r") as f:
             data = json.load(f)
-        # with open(jsonName, "r") as f:
-        #     data = f.read()
             f.close()
             print(jsonName, "found!")
         return data
@@ -135,7 +138,7 @@ class VipDt:
         return {"json": json, "status": str(response.status_code)}
     
     def getTractValues(self):
-        "Returns US Census data."
+        "Returns demographic data for a given US Census tract."
         json = self.LOCATION_DATA['json']
         tract_id = json['result']['addressMatches'][0]['geographies']['Census Tracts'][0]['TRACT']
         county_id = json['result']['addressMatches'][0]['geographies']['Census Tracts'][0]['COUNTY']
@@ -148,17 +151,12 @@ class VipDt:
             "tract_pop": population
             }
         print("Census data found...")
-        return census_vals
-
-    def getRadius(self):
-        """Returns demographic data for a given census tract."""
         api_key = self.CREDENTIALS['censuskey']
-        tract_data = self.CENSUS_DATA
-        area= float(tract_data['land_area'])
+        area= float(census_vals['land_area'])
         geo = censusdata.censusgeo(
-            [('state', str(tract_data['state_id'])),
-             ('county', str(tract_data['county_id'])),
-             ('tract', str(tract_data['tract_id']))]
+            [('state', str(census_vals['state_id'])),
+             ('county', str(census_vals['county_id'])),
+             ('tract', str(census_vals['tract_id']))]
         )
         ## ATTN! BELOW ARE CENSUS TABLE CODES WITH CORRESPONDING TITLES.
         data = censusdata.download(
@@ -184,11 +182,11 @@ class VipDt:
                 ], key=api_key)
         ## ATTN! BELOW ARE TABULATION VALUES FOR TARGET CENSUS TRACT.
         TRACT_DATA = {
-                "tractid": self.CENSUS_DATA['tract_id'], 
-                "countyid": self.CENSUS_DATA['county_id'], 
-                "stateid": self.CENSUS_DATA['state_id'], 
-                "landarea": self.CENSUS_DATA['land_area'], 
-                "tractpop100": self.CENSUS_DATA['tract_pop'],
+                "tractid": census_vals['tract_id'], 
+                "countyid": census_vals['county_id'], 
+                "stateid": census_vals['state_id'], 
+                "landarea": census_vals['land_area'], 
+                "tractpop100": census_vals['tract_pop'],
                 "Total respondents": data.B19001_001E,
                 "Income < $10000" : 10000 * data.B19001_002E,
                 "Income ~ $12500" : 12500 * data.B19001_003E,
@@ -200,7 +198,7 @@ class VipDt:
                 "Income ~ $42500" : 42500 * data.B19001_009E,
                 "Income ~ $47500" : 47500 * data.B19001_010E,
                 "Income ~ $55000" : 55000 * data.B19001_011E,
-                "Income ~ $67500" : 675000 * data.B19001_012E,
+                "Income ~ $67500" : 67500 * data.B19001_012E,
                 "Income ~ $87500" : 87500 * data.B19001_013E,
                 "Income ~ $112500": 112500 * data.B19001_014E,
                 "Income ~ $137500": 137500 * data.B19001_015E,
@@ -228,7 +226,7 @@ class VipDt:
             radius = 1000.00
         else: 
             radius = fsRadius
-        TRACT_DATA["Avg income"] = AVG_INCOME
+        TRACT_DATA["AVG INCOME"] = AVG_INCOME
         TRACT_DATA["RADIUS"] = radius
         print("Search radius:", radius)
         return TRACT_DATA
@@ -261,12 +259,13 @@ class VipDt:
             client_id = self.CREDENTIALS['fsid'], 
             client_secret = self.CREDENTIALS['fssecret'])
         if radius is None:
-            radius = self.LOCATION_DATA['TRACT']['RADIUS']
-        if latlng is None:
-            latlng = self.LOCATION_DATA['TRACT']['RADIUS']
-        coords = tuple(self.LOCATION_DATA['json']['result']
-                       ['addressMatches'][0]['coordinates'].values())
-        ll = ("{},{}").format(coords[1],coords[0])
+            radius = self.TRACT_DATA['RADIUS']
+        if isinstance(latlng,str):
+            ll = latlng
+        else:
+            coords = tuple(self.LOCATION_DATA['json']['result']\
+                ['addressMatches'][0]['coordinates'].values())
+            ll = ("{},{}").format(coords[1],coords[0])
         responses ={}
         for category in categories:
             params = {
@@ -336,14 +335,20 @@ class VipDt:
             if records[key]['menu']['menus']['count'] > 0:
                 menus = records[key]['menu']['menus']['items']
                 for menu in menus:
-                    menu_name = menu['name']
                     if menu['entries']['count'] > 0:
                         sections = menu['entries']['items']
                         for section in sections:
-                            section_name = section['name']
                             if section['entries']['count'] > 0:
                                 items = section['entries']['items']
                                 for item in items:
+                                    try:
+                                        menu_name = menu['name']
+                                    except KeyError:
+                                        menu_name = None
+                                    try:
+                                        section_name = section['name']
+                                    except KeyError:
+                                        section_name = None
                                     try:
                                         item_name = item['name']
                                     except KeyError:
@@ -374,14 +379,10 @@ class VipDt:
                 # print("NO MENUS IN VENUE:", key)
                 pass
         try:
-            df = pd.DataFrame.from_records(bulk_items, index=None, exclude=None,
-                                           coerce_float=True, nrows=iter_limit,
-                                           columns=['venue_name',
-                                                    'menu_name', 
-                                                    'section_name', 
-                                                    'item_name', 
-                                                    'item_desc', 
-                                                    'item_price'])
+            df = pd.DataFrame.from_records(
+                bulk_items, index=None, exclude=None, coerce_float=True, 
+                nrows=iter_limit, columns=['venue_name', 'menu_name', 
+                'section_name', 'item_name', 'item_desc', 'item_price'])
             if drop_na==True:
                 df.dropna(inplace=True)
             self.FS_SUMMARIES['MENUS'] = df
@@ -401,9 +402,12 @@ class VipDt:
          indicates whether to save a venue location map as html
         """
         venue_data = self.FS_JSON['VENUES']
-        search_address = self.LOCATION_DATA['json']['result']['addressMatches'][0]['matchedAddress']
-        search_lat = self.LOCATION_DATA['json']['result']['addressMatches'][0]['coordinates']['y']
-        search_lng = self.LOCATION_DATA['json']['result']['addressMatches'][0]['coordinates']['x']
+        search_address = self.LOCATION_DATA['json']['result']\
+            ['addressMatches'][0]['matchedAddress']
+        search_lat = self.LOCATION_DATA['json']['result']\
+            ['addressMatches'][0]['coordinates']['y']
+        search_lng = self.LOCATION_DATA['json']['result']\
+            ['addressMatches'][0]['coordinates']['x']
         search_coords = (search_lat,search_lng)
         m = folium.Map(
             name="Venue Locations", location=search_coords, 
@@ -473,10 +477,8 @@ class VipDt:
                 }]
         df = pd.DataFrame.from_records(
             venue_list, index=None, exclude=None, coerce_float=False, 
-            columns=[
-                'venue_name','category_idn', 'venue_address', 
-                'venue_lat', 'venue_lng'
-                ])
+            columns=['venue_name','category_idn', 'venue_address', \
+                'venue_lat', 'venue_lng'])
         self.FS_SUMMARIES['VENUES'] = df
         return df
     
@@ -494,11 +496,12 @@ class VipDt:
         menu_df = self.FS_SUMMARIES['MENUS']
         if menus is not None:
             menu_df = menus
-        menu_data = menu_df[
-            ['venue_name', 'menu_name', 'section_name', 
-            'item_name', 'item_desc', 'item_price']
-        ]
+        menu_data = menu_df[['venue_name', 'menu_name', 'section_name', \
+            'item_name', 'item_desc', 'item_price']]
+
         # menu_data['item_price'] = menu_data['item_price'].astype('float64')
+        menu_data['item_price'].astype('float64', inplace=True)
+
         menu_data = menu_data.dropna()
         menu_desc = menu_data.groupby(['menu_name']).describe()
         explore_menus = menu_data.groupby(
@@ -588,9 +591,7 @@ class VipDt:
         value = json.load(data)
         venues = pd.read_json(value["VENUES"])
         menus = pd.read_json(value["MENUS"])
-        payload = {
-            "VENUES": venues, "MENUS": menus
-            }
+        payload = {"VENUES": venues, "MENUS": menus}
         self.FS_JSON=payload
         return payload
 
