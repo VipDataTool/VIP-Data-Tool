@@ -32,10 +32,19 @@ import pandas as pd
 import scipy.stats
 import requests
 import folium
-import numpy as np
+import numpy as np        
+
+pd.set_option('display.precision', 2)
+pd.set_option('display.max_rows', 1000)
+pd.set_option('display.max_columns', 100)
+pd.set_option('display.width', 150)
+
 print("Dependencies imported.")
 
+
+
 __version__ = '0.9.0'
+
 
 
 class VipDt:
@@ -61,10 +70,7 @@ class VipDt:
         """
         Initializes class object parameters.
         """
-        pd.set_option('display.precision', 2)
-        pd.set_option('display.max_rows', 500)
-        pd.set_option('display.max_columns', 20)
-        pd.set_option('display.width', 150)
+
 
         self.ADDRESS = str(address)
         self.CREDENTIALS = credentials
