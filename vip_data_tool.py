@@ -233,7 +233,7 @@ class VipDt:
             radius = 1000.00
         else: 
             radius = fsRadius
-        TRACT_DATA["AVG INCOME"] = AVG_INCOME
+        TRACT_DATA["AVG_INCOME"] = AVG_INCOME
         TRACT_DATA["RADIUS"] = radius
         print("Search radius:", radius)
         return TRACT_DATA
