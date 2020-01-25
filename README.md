@@ -18,10 +18,12 @@ Start by creating an instance of the class object by passing two arguments:
     - "fssecret" : "Valid Foursquare User Key",  
     - "censuskey" : "Valid US Census API Key"  
 
-The resulting instance can then be treated as a client for querying venue information specific to the area defined by the aforementioned address and a radius dynamically calculated based upon available location demographic data. To query venue data, simply call the 'setter' and 'getter' methods provided to populate the object with resulting data.  
+The resulting instance can then be treated as a client for querying venue information specific to the area defined by the aforementioned address and a radius dynamically calculated based upon available location demographic data. To query venue data, simply call the 'setter' and 'getter' methods provided to populate the object with data.  
 
-A localized map can be generated from the venue data, as well as dataframes of the subsequent demographic, venue and menu data for further analysis. Instances can be 'pickled' as well, however the Folium objects cannot, but thankfully, maps can easily be regenerated upon deserialization.
-
+A localized map can be generated from the venue data, as well as dataframes of the subsequent demographic, venue and menu data for further reference or analysis.  
+  
+Instances can be 'pickled', however the Folium objects cannot, but thankfully, maps can easily be regenerated upon deserialization.  
+  
 USER DICTIONARY OBJECTS:  
 VipDt.LOCATION  
 VipDt.FS_JSON  
