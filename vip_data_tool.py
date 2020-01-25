@@ -67,9 +67,7 @@ class VipDt:
     """ 
     
     def __init__(self, address, credentials):
-        """
-        Initializes class object parameters.
-        """
+        """Initializes class object parameters."""
         self.ADDRESS = str(address)
         self.CREDENTIALS = credentials
         self.LOCATION_DATA = VipDt.getCensusGeo(self)
@@ -98,7 +96,7 @@ class VipDt:
     @staticmethod
     def getJsonTokens(file_name="credentials.json"):
         """
-        A method for reconstituting previously serialized JSON data. 'FS_JSON.json' by default.
+        A method for reconstituting previously serialized JSON data.
 
         Parameters
         ----------
@@ -144,11 +142,16 @@ class VipDt:
     def getTractValues(self):
         "Returns demographic data for a given US Census tract."
         json = self.LOCATION_DATA['json']
-        tract_id = json['result']['addressMatches'][0]['geographies']['Census Tracts'][0]['TRACT']
-        county_id = json['result']['addressMatches'][0]['geographies']['Census Tracts'][0]['COUNTY']
-        state_id = json['result']['addressMatches'][0]['geographies']['Census Tracts'][0]['STATE']
-        land_area = json['result']['addressMatches'][0]['geographies']['Census Tracts'][0]['AREALAND']
-        population = json['result']['addressMatches'][0]['geographies']['Census Tracts'][0]['POP100']
+        tract_id = json['result']['addressMatches'][0]\
+            ['geographies']['Census Tracts'][0]['TRACT']
+        county_id = json['result']['addressMatches'][0]\
+            ['geographies']['Census Tracts'][0]['COUNTY']
+        state_id = json['result']['addressMatches'][0]\
+            ['geographies']['Census Tracts'][0]['STATE']
+        land_area = json['result']['addressMatches'][0]\
+            ['geographies']['Census Tracts'][0]['AREALAND']
+        population = json['result']['addressMatches'][0]\
+            ['geographies']['Census Tracts'][0]['POP100']
         census_vals = {
             "tract_id": tract_id, "county_id": county_id, 
             "state_id": state_id, "land_area": land_area, 
@@ -328,7 +331,7 @@ class VipDt:
         records: list
          a list of menu query responses
         drop_na: bool
-         indicates whether to drop NoneTypes from dataframe, False by default 
+         whether to drop NoneTypes from dataframe, False by default 
         iter_limit: int
          the number of maximum observations per dataframe
         """
@@ -417,7 +420,8 @@ class VipDt:
             name="Venue Locations", location=search_coords, 
             zoom_start=12, control_scale=True)
         folium.CircleMarker(
-            search_coords, popup = search_address, tooltip = search_address).add_to(m)
+            search_coords, popup = search_address, 
+            tooltip = search_address).add_to(m)
         for category in venue_data:
             venue_category = category
             for venue in venue_data[category]['venues']:
@@ -429,22 +433,28 @@ class VipDt:
                 ## 'Nightlife' ID: "4d4b7105d754a06376d81259"
                 if venue_category=="4d4b7105d754a06376d81259":  
                     folium.Marker(
-                        venue_coords, popup = venue_type, tooltip = venue_name,
+                        venue_coords, popup = venue_type, 
+                        tooltip = venue_name,
                         icon = folium.Icon(
-                            icon= 'glyphicon-glass', color = 'blue')
+                            icon= 'glyphicon-glass', 
+                            color = 'blue')
                         ).add_to(m)
                 ## 'Food' ID:'4d4b7105d754a06374d81259'
                 elif venue_category=='4d4b7105d754a06374d81259':  
                     folium.Marker(
-                        venue_coords, popup = venue_type, tooltip = venue_name,
+                        venue_coords, popup = venue_type, 
+                        tooltip = venue_name,
                         icon = folium.Icon(
-                            icon='glyphicon-cutlery', color = 'red')
+                            icon='glyphicon-cutlery', 
+                            color = 'red')
                         ).add_to(m)
                 else:
                     folium.Marker(
-                        venue_coords, popup = venue_type, tooltip = venue_name,
+                        venue_coords, popup = venue_type, 
+                        tooltip = venue_name,
                         icon = folium.Icon(
-                            icon='glyphicon-map-marker', color = 'orange')
+                            icon='glyphicon-map-marker', 
+                            color = 'orange')
                         ).add_to(m)
         self.FS_SUMMARIES['MAP'] = m
         if save_map == True:
@@ -452,7 +462,9 @@ class VipDt:
         return m
 
     def setVenuesDf(self):
-        """A method for extracting a dataframe of local venues from 'VENUES' json."""
+        """
+        A method for extracting a dataframe of from 'VENUES' json.
+        """
         json = self.FS_JSON['VENUES']
         venue_list = []
         for category in json:
@@ -504,7 +516,7 @@ class VipDt:
             'item_name', 'item_desc', 'item_price']]
 
         # menu_data['item_price'] = menu_data['item_price'].astype('float64')
-        menu_data['item_price'].astype('float64', inplace=True)
+        # menu_data['item_price'].astype('float64', inplace=True)
 
         menu_data = menu_data.dropna()
         menu_desc = menu_data.groupby(['menu_name']).describe()
@@ -564,7 +576,7 @@ class VipDt:
         Parameters
         ----------
         file_name: str
-         a file name for retrieving pickled objects. 'instance.pickle' by default.
+         a file name for retrieving pickled objects.
         """
         pickleName = file_name
         try:
