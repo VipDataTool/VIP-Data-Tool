@@ -348,19 +348,19 @@ class VipDt:
                                     try:
                                         menu_name = menu['name']
                                     except KeyError:
-                                        menu_name = None
+                                        menu_name = "no menu title"
                                     try:
                                         section_name = section['name']
                                     except KeyError:
-                                        section_name = None
+                                        section_name = "no section title"
                                     try:
                                         item_name = item['name']
                                     except KeyError:
-                                        item_name = None
+                                        item_name = "No item name"
                                     try:
                                         item_desc = item['description']
                                     except KeyError:
-                                        item_desc = None
+                                        item_desc = "No item description"
                                     try:
                                         item_price = float(item['price'])
                                     except (KeyError, ValueError):
