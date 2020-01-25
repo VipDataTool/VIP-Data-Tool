@@ -580,7 +580,7 @@ class VipDt:
 
     def getJson(self, file_name):
         """
-        A method for reconstituting previously serialized JSON data. 'FS_JSON.json' by default.
+        A method for reconstituting previously serialized JSON data.
 
         Parameters
         ----------
