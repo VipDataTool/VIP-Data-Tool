@@ -459,11 +459,12 @@ class VipDt:
                 venue_type = venue['categories'][0]['name']
                 venue_lat = venue['location']['lat']
                 venue_lng = venue['location']['lng']
+                attribution_url = ("<a href=https://foursquare.com/v/{}>{}</a>").format(venue['id'],venue_type)
                 venue_coords = (venue_lat,venue_lng)
                 ## 'Nightlife' ID: "4d4b7105d754a06376d81259"
                 if venue_category=="4d4b7105d754a06376d81259":  
                     folium.Marker(
-                        venue_coords, popup = venue_type, 
+                        venue_coords, popup = attribution_url, 
                         tooltip = venue_name,
                         icon = folium.Icon(
                             icon= 'glyphicon-glass', 
@@ -472,7 +473,7 @@ class VipDt:
                 ## 'Food' ID:'4d4b7105d754a06374d81259'
                 elif venue_category=='4d4b7105d754a06374d81259':  
                     folium.Marker(
-                        venue_coords, popup = venue_type, 
+                        venue_coords, popup = attribution_url, 
                         tooltip = venue_name,
                         icon = folium.Icon(
                             icon='glyphicon-cutlery', 
@@ -480,7 +481,7 @@ class VipDt:
                         ).add_to(m)
                 else:
                     folium.Marker(
-                        venue_coords, popup = venue_type, 
+                        venue_coords, popup = attribution_url, 
                         tooltip = venue_name,
                         icon = folium.Icon(
                             icon='glyphicon-map-marker', 
@@ -533,6 +534,14 @@ class VipDt:
                     delivery_url = venue['delivery']['url']
                 except KeyError:
                     delivery_url = None
+                try:
+                    root= "https://foursquare.com/v/"
+                    vid= str(venue_id)
+                    cid = self.CREDENTIALS['fsid']
+                    ref = ("?ref={}").format(cid)
+                    string_url = ("{}{}").format(root,vid)#,ref)
+                except:
+                    string_url = None
                 venue_list += [{
                     "venue_name": venue_name,
                     "venue_id": venue_id,
@@ -542,7 +551,8 @@ class VipDt:
                     "venue_lng": venue_lng,
                     "venue_referral_id": venue_referral_id,
                     "delivery_provider": delivery_provider,
-                    "delivery_url": delivery_url
+                    "delivery_url": delivery_url,
+                    "attribution_link": string_url
                 }]
         df = pd.DataFrame.from_records(
             venue_list, index=None, exclude=None, coerce_float=False, 
