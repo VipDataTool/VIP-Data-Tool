@@ -42,9 +42,7 @@ pd.set_option('display.max_columns', 50)
 print("Dependencies imported.")
 
 
-
 __version__ = '0.9.0'
-
 
 
 class VipDt:
@@ -225,8 +223,8 @@ class VipDt:
             / TRACT_DATA['tractpop100'])
         ## ATTN! BELOW ARE CALCULATIONS FOR DYNAMIC SEARCH RADIUS
         pop = TRACT_DATA['tractpop100']
-        fsRadius = (((area/pop)/ 6.28)**3
-                    +(AVG_INCOME/pop)**3)**(1/2)+1000.00
+        fsRadius = (((area/pop)/ 3.14)**3
+                    +(AVG_INCOME/pop)**3)**(1/2.5)+1000.00
         if fsRadius > 50000.00: 
             radius = 50000.00
         elif fsRadius < 1000.00: 
@@ -343,10 +341,6 @@ class VipDt:
         bulk_items = []
         for key in records:
             if records[key]['menu']['menus']['count'] > 0:
-                try:
-                    attribution_link = records[key]['menu']['provider']['attributionLink']
-                except:
-                    attribution_link = None
                 menus = records[key]['menu']['menus']['items']
                 for menu in menus:
                     if menu['entries']['count'] > 0:
@@ -375,16 +369,11 @@ class VipDt:
                                         item_price = float(item['price'])
                                     except (KeyError, ValueError):
                                         item_price = None
-                                    attribution = attribution_link
-                                    # try:
-                                    #     root= "https://foursquare.com/v/"
-                                    #     vid= "4b7736edf964a52080882ee3"
-                                    #     ref= "?ref="
-                                    #     cid = CLIENT_ID
-                                    #     params = ("{}{}{}").format(vid,ref,cid)
-                                    #     string_url = ("{}{}").format(root,params)
-                                    # except:
-                                    #     string_url = None
+                                    try:
+                                        attribution_link = records[key]['menu']\
+                                            ['provider']['attributionLink']
+                                    except KeyError:
+                                        attribution_link = None
                                     bulk_items += [{
                                         'venue_name': key,
                                         'menu_name': menu_name,
@@ -392,7 +381,7 @@ class VipDt:
                                         'item_name': item_name,
                                         'item_desc': item_desc,
                                         'item_price' : item_price,
-                                        'attribution': attribution
+                                        'attribution': attribution_link
                                     }]
                             else:
                                 # print("NO ITEMS IN SECTION", section_name)
@@ -448,7 +437,7 @@ class VipDt:
         search_coords = (search_lat,search_lng)
         m = folium.Map(
             name="Venue Locations", location=search_coords, 
-            zoom_start=12, control_scale=True)
+            zoom_start=13, control_scale=True)
         folium.CircleMarker(
             search_coords, popup = search_address, 
             tooltip = search_address).add_to(m)
@@ -459,7 +448,9 @@ class VipDt:
                 venue_type = venue['categories'][0]['name']
                 venue_lat = venue['location']['lat']
                 venue_lng = venue['location']['lng']
-                attribution_url = ("<a href=https://foursquare.com/v/{}>{}</a>").format(venue['id'],venue_type)
+                attribution_url = (
+                    "<a href=https://foursquare.com/v/{}>{}</a>").format(
+                        venue['id'], venue_type)
                 venue_coords = (venue_lat,venue_lng)
                 ## 'Nightlife' ID: "4d4b7105d754a06376d81259"
                 if venue_category=="4d4b7105d754a06376d81259":  
@@ -535,10 +526,9 @@ class VipDt:
                 except KeyError:
                     delivery_url = None
                 try:
-                    root= "https://foursquare.com/v/"
                     vid= str(venue_id)
                     # cid = self.CREDENTIALS['fsid']
-                    string_url = ("{}{}").format(root,vid)#,ref)
+                    string_url = ("https://foursquare.com/v/{}").format(vid)#,ref)
                 except:
                     string_url = None
                 venue_list += [{
