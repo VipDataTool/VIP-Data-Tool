@@ -537,7 +537,7 @@ class VipDt:
                 try:
                     root= "https://foursquare.com/v/"
                     vid= str(venue_id)
-                    cid = self.CREDENTIALS['fsid']
+                    # cid = self.CREDENTIALS['fsid']
                     string_url = ("{}{}").format(root,vid)#,ref)
                 except:
                     string_url = None
