@@ -325,8 +325,7 @@ class VipDt:
         print("Menu query operation complete!")
         return menus
 
-    def setMenusDf(self, records=None, drop_na=False, iter_limit=None, \
-        drop_menus_with=["atering","ine"]):
+    def setMenusDf(self, records=None, drop_na=False, iter_limit=None, drop_menus_with=[]):
         """
         A method for extracting a dataframe from 'MENUS' json.
 
