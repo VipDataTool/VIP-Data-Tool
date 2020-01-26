@@ -496,19 +496,28 @@ class VipDt:
         for category in venue_data:
             for venue in venue_data[category]['venues']:
                 venue_name = venue['name']
+                venue_id = venue['id']
                 venue_type = venue['categories'][0]['name']
                 venue_lat = venue['location']['lat']
                 venue_lng = venue['location']['lng']
+                try:
+                    venue_icon = self.FOLIUM_ICONS[category][1]
+                    venue_icon_color = self.FOLIUM_ICONS[category][2]
+                except:
+                    venue_icon = glyphicon glyphicon-search
+                    venue_icon_color = 'lightred'
                 attribution_url = (
                     "<a href=https://foursquare.com/v/{}>{}</a>").format(
-                        venue['id'], venue_type)
-                venue_coords = (venue_lat,venue_lng)
+                        venue_id, 
+                        venue_type)
+                venue_coords = (venue_lat, venue_lng)
                 folium.Marker(
-                    venue_coords, popup = attribution_url, 
+                    venue_coords, 
+                    popup = attribution_url, 
                     tooltip = venue_name,
                     icon = folium.Icon(
-                        icon= self.FOLIUM_ICONS[category][1],
-                        color= self.FOLIUM_ICONS[category][2])
+                        icon= venue_icon,
+                        color= venue_icon_color)
                     ).add_to(m)
         self.FS_SUMMARIES['MAP'] = m
         if save_map == True:
