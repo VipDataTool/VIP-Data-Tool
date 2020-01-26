@@ -494,7 +494,6 @@ class VipDt:
             search_coords, popup = search_address, 
             tooltip = search_address).add_to(m)
         for category in venue_data:
-            venue_category = category
             for venue in venue_data[category]['venues']:
                 venue_name = venue['name']
                 venue_type = venue['categories'][0]['name']
