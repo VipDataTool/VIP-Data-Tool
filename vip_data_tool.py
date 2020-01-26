@@ -83,6 +83,20 @@ class VipDt:
             'MAP' : None
         }
 
+        self.OUTPUT_LABELS = {
+            'pickleLabel' : ("{}.pickle").format(self.ADDRESS),
+            'jsonLabel' : ("{}.json").format(self.ADDRESS),
+            'xlLabel' : ("{}.xlsx").format(self.ADDRESS),
+            'foliumLabel' : ("{}.html").format(self.ADDRESS)
+        }
+
+        #  ## FOLIUM MARKER COLOR CODES BELOW:
+        #  ['red', 'blue', 'green', 'purple', 'orange', 
+        #  'darkred', 'lightred', 'beige', 'darkblue', 
+        #  'darkgreen', 'cadetblue', 'darkpurple', 'white', 
+        #  'pink', 'lightblue', 'lightgreen', 'gray', 
+        #  'black', 'lightgray']
+
         self.FOLIUM_ICONS = {
             "4d4b7104d754a06370d81259": [
                 "Arts & Entertainment", 
@@ -126,23 +140,10 @@ class VipDt:
                 "cadetblue"]
             }
 
-            #  ## FOLIUM MARKER COLOR CODES BELOW:
-            #  ['red', 'blue', 'green', 'purple', 'orange', 
-            #  'darkred', 'lightred', 'beige', 'darkblue', 
-            #  'darkgreen', 'cadetblue', 'darkpurple', 'white', 
-            #  'pink', 'lightblue', 'lightgreen', 'gray', 
-            #  'black', 'lightgray']
+            
 
-
-
-        self.OUTPUT_LABELS = {
-            'pickleLabel' : ("{}.pickle").format(self.ADDRESS),
-            'jsonLabel' : ("{}.json").format(self.ADDRESS),
-            'xlLabel' : ("{}.xlsx").format(self.ADDRESS),
-            'foliumLabel' : ("{}.html").format(self.ADDRESS)
-        }
+        
     
-
     @staticmethod
     def getJsonTokens(file_name="credentials.json"):
         """
@@ -340,7 +341,131 @@ class VipDt:
         self.FS_JSON['VENUES'] = responses
         print("Venue query operation complete!")
         return responses
-    
+
+    def setVenuesDf(self):
+        """
+        A method for extracting a dataframe of from 'VENUES' json.
+        """
+        json = self.FS_JSON['VENUES']
+        venue_list = []
+        for category in json:
+            category_idn = category
+            venues = json[category]['venues']
+            for venue in venues:
+                try:
+                    venue_name = venue['name']
+                except KeyError:
+                    venue_name = None
+                try:
+                    venue_id = venue['id']
+                except KeyError:
+                    venue_id = None
+                try:
+                    venue_address = venue['location']['address']
+                except KeyError:
+                    venue_address = None
+                try:
+                    venue_lat = venue['location']['lat']
+                except KeyError:
+                    venue_lat = None
+                try:
+                    venue_lng = venue['location']['lng']
+                except KeyError:
+                    venue_lng = None
+                try:
+                    venue_referral_id = venue["referralId"]
+                except KeyError:
+                    venue_referral_id = None
+                try:
+                    delivery_provider = venue['delivery']['provider']['name']
+                except KeyError:
+                    delivery_provider = None
+                try:
+                    delivery_url = venue['delivery']['url']
+                except KeyError:
+                    delivery_url = None
+                try:
+                    vid= str(venue_id)
+                    string_url = ("https://foursquare.com/v/{}").format(vid)
+                    # ## FOURSQUARE REFERRAL WITH CLIENT_ID
+                    # cid = self.CREDENTIALS['fsid']
+                    # string_url = ("https://foursquare.com/v/{}&ref={}").format(vid,cid)
+                except:
+                    string_url = None
+                venue_list += [{
+                    "venue_name": venue_name,
+                    "venue_id": venue_id,
+                    "category_idn": category_idn,
+                    "venue_address": venue_address,
+                    "venue_lat": venue_lat,
+                    "venue_lng": venue_lng,
+                    "venue_referral_id": venue_referral_id,
+                    "delivery_provider": delivery_provider,
+                    "delivery_url": delivery_url,
+                    "attribution_link": string_url
+                }]
+        df = pd.DataFrame.from_records(
+            venue_list, index=None, exclude=None, coerce_float=False, 
+            columns=['venue_name',"venue_id",'category_idn', 'venue_address', \
+                'venue_lat', 'venue_lng', "venue_referral_id", "delivery_provider", 
+                "delivery_url"])
+        self.FS_SUMMARIES['VENUES'] = df
+        return df
+
+    def getVenuesMap(self, save_map=True):
+        """
+        A method for creating a Folium map from 'VENUES' json
+
+        Parameters
+        ----------
+        save_map: bool
+         indicates whether to save a venue location map as html
+        """
+        venue_data = self.FS_JSON['VENUES']
+        search_address = self.LOCATION_DATA['json']['result']\
+            ['addressMatches'][0]['matchedAddress']
+        search_lat = self.LOCATION_DATA['json']['result']\
+            ['addressMatches'][0]['coordinates']['y']
+        search_lng = self.LOCATION_DATA['json']['result']\
+            ['addressMatches'][0]['coordinates']['x']
+        search_coords = (search_lat,search_lng)
+        m = folium.Map(
+            name="Venue Locations", location=search_coords, 
+            zoom_start=13, control_scale=True)
+        folium.CircleMarker(
+            search_coords, popup = search_address, 
+            tooltip = search_address).add_to(m)
+        for category in venue_data:
+            for venue in venue_data[category]['venues']:
+                venue_name = venue['name']
+                venue_id = venue['id']
+                venue_type = venue['categories'][0]['name']
+                venue_lat = venue['location']['lat']
+                venue_lng = venue['location']['lng']
+                try:
+                    venue_icon = self.FOLIUM_ICONS[category][1]
+                    venue_icon_color = self.FOLIUM_ICONS[category][2]
+                except KeyError:
+                    venue_icon = "glyphicon glyphicon-search"
+                    venue_icon_color = 'lightred'
+                attribution_url = (
+                    "<a href=https://foursquare.com/v/{}>{}</a>").format(
+                        venue_id, 
+                        venue_type)
+                venue_coords = (venue_lat, venue_lng)
+                folium.Marker(
+                    venue_coords, 
+                    popup = attribution_url, 
+                    tooltip = venue_name,
+                    icon = folium.Icon(
+                        icon= venue_icon,
+                        color= venue_icon_color)
+                    ).add_to(m)
+        self.FS_SUMMARIES['MAP'] = m
+        if save_map == True:
+            m.save(self.OUTPUT_LABELS['foliumLabel'])
+        return m
+
     def getMenus(self,venues=None):
         """
         A method for returning raw menu data.
@@ -469,131 +594,6 @@ class VipDt:
             print("Error! Failed to create dataframe.")
             pass
 
-
-    def getVenuesMap(self, save_map=True):
-        """
-        A method for creating a Folium map from 'VENUES' json
-
-        Parameters
-        ----------
-        save_map: bool
-         indicates whether to save a venue location map as html
-        """
-        venue_data = self.FS_JSON['VENUES']
-        search_address = self.LOCATION_DATA['json']['result']\
-            ['addressMatches'][0]['matchedAddress']
-        search_lat = self.LOCATION_DATA['json']['result']\
-            ['addressMatches'][0]['coordinates']['y']
-        search_lng = self.LOCATION_DATA['json']['result']\
-            ['addressMatches'][0]['coordinates']['x']
-        search_coords = (search_lat,search_lng)
-        m = folium.Map(
-            name="Venue Locations", location=search_coords, 
-            zoom_start=13, control_scale=True)
-        folium.CircleMarker(
-            search_coords, popup = search_address, 
-            tooltip = search_address).add_to(m)
-        for category in venue_data:
-            for venue in venue_data[category]['venues']:
-                venue_name = venue['name']
-                venue_id = venue['id']
-                venue_type = venue['categories'][0]['name']
-                venue_lat = venue['location']['lat']
-                venue_lng = venue['location']['lng']
-                try:
-                    venue_icon = self.FOLIUM_ICONS[category][1]
-                    venue_icon_color = self.FOLIUM_ICONS[category][2]
-                except KeyError:
-                    venue_icon = "glyphicon glyphicon-search"
-                    venue_icon_color = 'lightred'
-                attribution_url = (
-                    "<a href=https://foursquare.com/v/{}>{}</a>").format(
-                        venue_id, 
-                        venue_type)
-                venue_coords = (venue_lat, venue_lng)
-                folium.Marker(
-                    venue_coords, 
-                    popup = attribution_url, 
-                    tooltip = venue_name,
-                    icon = folium.Icon(
-                        icon= venue_icon,
-                        color= venue_icon_color)
-                    ).add_to(m)
-        self.FS_SUMMARIES['MAP'] = m
-        if save_map == True:
-            m.save(self.OUTPUT_LABELS['foliumLabel'])
-        return m
-
-    def setVenuesDf(self):
-        """
-        A method for extracting a dataframe of from 'VENUES' json.
-        """
-        json = self.FS_JSON['VENUES']
-        venue_list = []
-        for category in json:
-            category_idn = category
-            venues = json[category]['venues']
-            for venue in venues:
-                try:
-                    venue_name = venue['name']
-                except KeyError:
-                    venue_name = None
-                try:
-                    venue_id = venue['id']
-                except KeyError:
-                    venue_id = None
-                try:
-                    venue_address = venue['location']['address']
-                except KeyError:
-                    venue_address = None
-                try:
-                    venue_lat = venue['location']['lat']
-                except KeyError:
-                    venue_lat = None
-                try:
-                    venue_lng = venue['location']['lng']
-                except KeyError:
-                    venue_lng = None
-                try:
-                    venue_referral_id = venue["referralId"]
-                except KeyError:
-                    venue_referral_id = None
-                try:
-                    delivery_provider = venue['delivery']['provider']['name']
-                except KeyError:
-                    delivery_provider = None
-                try:
-                    delivery_url = venue['delivery']['url']
-                except KeyError:
-                    delivery_url = None
-                try:
-                    vid= str(venue_id)
-                    string_url = ("https://foursquare.com/v/{}").format(vid)
-                    # ## FOURSQUARE REFERRAL WITH CLIENT_ID
-                    # cid = self.CREDENTIALS['fsid']
-                    # string_url = ("https://foursquare.com/v/{}&ref={}").format(vid,cid)
-                except:
-                    string_url = None
-                venue_list += [{
-                    "venue_name": venue_name,
-                    "venue_id": venue_id,
-                    "category_idn": category_idn,
-                    "venue_address": venue_address,
-                    "venue_lat": venue_lat,
-                    "venue_lng": venue_lng,
-                    "venue_referral_id": venue_referral_id,
-                    "delivery_provider": delivery_provider,
-                    "delivery_url": delivery_url,
-                    "attribution_link": string_url
-                }]
-        df = pd.DataFrame.from_records(
-            venue_list, index=None, exclude=None, coerce_float=False, 
-            columns=['venue_name',"venue_id",'category_idn', 'venue_address', \
-                'venue_lat', 'venue_lng', "venue_referral_id", "delivery_provider", 
-                "delivery_url"])
-        self.FS_SUMMARIES['VENUES'] = df
-        return df
-    
     def getMenuStats(self, menus=None, confidence=0.99):
         """
         Returns a dictionary of dataframes with descriptive 'price' analyses.
