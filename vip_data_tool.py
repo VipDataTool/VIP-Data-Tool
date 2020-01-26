@@ -87,11 +87,11 @@ class VipDt:
             "4d4b7104d754a06370d81259": [
                 "Arts & Entertainment", 
                 "glyphicon glyphicon-music",
-                "blue"],
+                "darkblue"],
             "4d4b7105d754a06372d81259": [
                 "College & University", 
                 "glyphicon glyphicon-education",
-                "beige"],
+                "darkred"],
             "4d4b7105d754a06373d81259": [
                 "Event", 
                 "glyphicon glyphicon-calendar",
@@ -99,11 +99,11 @@ class VipDt:
             "4d4b7105d754a06374d81259": [
                 "Food", 
                 "glyphicon glyphicon-cutlery",
-                "red"],
+                "lightred"],
             "4d4b7105d754a06376d81259": [
                 "Nightlife Spot", 
                 "glyphicon glyphicon-glass",
-                "darkblue"],
+                "lightblue"],
             "4d4b7105d754a06377d81259": [
                 "Outdoors & Recreation", 
                 "glyphicon glyphicon-tree-conifer",
@@ -115,7 +115,7 @@ class VipDt:
             "4e67e38e036454776db1fb3a": [
                 "Residence", 
                 "glyphicon glyphicon-home",
-                "lightgray"],
+                "beige"],
             "4d4b7105d754a06378d81259": [
                 "Shop & Service", 
                 "glyphicon glyphicon-shopping-cart",
@@ -125,7 +125,7 @@ class VipDt:
                 "glyphicon glyphicon-plane",
                 "cadetblue"]
             }
-
+            #  ## FOLIUM MARKER COLOR CODES BELOW:
             #  ['red', 'blue', 'green', 'purple', 'orange', 
             #  'darkred', 'lightred', 'beige', 'darkblue', 
             #  'darkgreen', 'cadetblue', 'darkpurple', 'white', 
@@ -568,8 +568,10 @@ class VipDt:
                     delivery_url = None
                 try:
                     vid= str(venue_id)
+                    string_url = ("https://foursquare.com/v/{}").format(vid)
+                    # ## FOURSQUARE REFERRAL WITH CLIENT_ID
                     # cid = self.CREDENTIALS['fsid']
-                    string_url = ("https://foursquare.com/v/{}").format(vid)#,ref)
+                    # string_url = ("https://foursquare.com/v/{}&ref={}").format(vid,cid)
                 except:
                     string_url = None
                 venue_list += [{
