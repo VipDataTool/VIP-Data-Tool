@@ -552,10 +552,8 @@ class VipDt:
             menu_df = menus
         menu_data = menu_df[['venue_name', 'menu_name', 'section_name', \
             'item_name', 'item_desc', 'item_price']]
-
         # menu_data['item_price'] = menu_data['item_price'].astype('float64')
         # menu_data['item_price'].astype('float64', inplace=True)
-
         menu_data = menu_data.dropna()
         menu_desc = menu_data.groupby(['menu_name']).describe()
         explore_menus = menu_data.groupby(
