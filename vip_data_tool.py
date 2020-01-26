@@ -83,6 +83,58 @@ class VipDt:
             'MAP' : None
         }
 
+        self.FOLIUM_ICONS = {
+            "4d4b7104d754a06370d81259": [
+                "Arts & Entertainment", 
+                "glyphicon glyphicon-music",
+                "blue"],
+            "4d4b7105d754a06372d81259": [
+                "College & University", 
+                "glyphicon glyphicon-education",
+                "beige"],
+            "4d4b7105d754a06373d81259": [
+                "Event", 
+                "glyphicon glyphicon-calendar",
+                "purple"],
+            "4d4b7105d754a06374d81259": [
+                "Food", 
+                "glyphicon glyphicon-cutlery",
+                "red"],
+            "4d4b7105d754a06376d81259": [
+                "Nightlife Spot", 
+                "glyphicon glyphicon-glass",
+                "darkblue"],
+            "4d4b7105d754a06377d81259": [
+                "Outdoors & Recreation", 
+                "glyphicon glyphicon-tree-conifer",
+                "lightgreen"],
+            "4d4b7105d754a06375d81259": [
+                "Professional & Other Places", 
+                "glyphicon glyphicon-envelope",
+                "gray"],
+            "4e67e38e036454776db1fb3a": [
+                "Residence", 
+                "glyphicon glyphicon-home",
+                "lightgray"],
+            "4d4b7105d754a06378d81259": [
+                "Shop & Service", 
+                "glyphicon glyphicon-shopping-cart",
+                "orange"],
+            "4d4b7105d754a06379d81259": [
+                "Travel & Transport", 
+                "glyphicon glyphicon-plane",
+                "cadetblue"]
+            }
+
+            #  ['red', 'blue', 'green', 'purple', 'orange', 
+            #  'darkred', 'lightred', 'beige', 'darkblue', 
+            #  'darkgreen', 'cadetblue', 'darkpurple', 'white', 
+            #  'pink', 'lightblue', 'lightgreen', 'gray', 
+            #  'black', 'lightgray']
+
+
+
+
         self.OUTPUT_LABELS = {
             'pickleLabel' : ("{}.pickle").format(self.ADDRESS),
             'jsonLabel' : ("{}.json").format(self.ADDRESS),
@@ -452,32 +504,13 @@ class VipDt:
                     "<a href=https://foursquare.com/v/{}>{}</a>").format(
                         venue['id'], venue_type)
                 venue_coords = (venue_lat,venue_lng)
-                ## 'Nightlife' ID: "4d4b7105d754a06376d81259"
-                if venue_category=="4d4b7105d754a06376d81259":  
-                    folium.Marker(
-                        venue_coords, popup = attribution_url, 
-                        tooltip = venue_name,
-                        icon = folium.Icon(
-                            icon= 'glyphicon-glass', 
-                            color = 'blue')
-                        ).add_to(m)
-                ## 'Food' ID:'4d4b7105d754a06374d81259'
-                elif venue_category=='4d4b7105d754a06374d81259':  
-                    folium.Marker(
-                        venue_coords, popup = attribution_url, 
-                        tooltip = venue_name,
-                        icon = folium.Icon(
-                            icon='glyphicon-cutlery', 
-                            color = 'red')
-                        ).add_to(m)
-                else:
-                    folium.Marker(
-                        venue_coords, popup = attribution_url, 
-                        tooltip = venue_name,
-                        icon = folium.Icon(
-                            icon='glyphicon-map-marker', 
-                            color = 'orange')
-                        ).add_to(m)
+                folium.Marker(
+                    venue_coords, popup = attribution_url, 
+                    tooltip = venue_name,
+                    icon = folium.Icon(
+                        icon= self.FOLIUM_ICONS[category][1],
+                        color= self.FOLIUM_ICONS[category][2])
+                    ).add_to(m)
         self.FS_SUMMARIES['MAP'] = m
         if save_map == True:
             m.save(self.OUTPUT_LABELS['foliumLabel'])
