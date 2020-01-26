@@ -36,8 +36,8 @@ import numpy as np
 
 pd.set_option('display.precision', 2)
 pd.set_option('display.max_rows', 1000)
-pd.set_option('display.max_columns', 100)
-pd.set_option('display.width', 150)
+pd.set_option('display.max_columns', 50)
+# pd.set_option('display.width', 150)
 
 print("Dependencies imported.")
 
@@ -242,6 +242,9 @@ class VipDt:
                   intent="browse", limit=50, 
                   categories=['4d4b7105d754a06376d81259', 
                               '4d4b7105d754a06374d81259']):
+        ## 'Nightlife' ID: "4d4b7105d754a06376d81259"
+        ## 'Food' ID:'4d4b7105d754a06374d81259'                      
+        ## 'Pizza Place' ID: '4bf58dd8d48988d1ca941735
         """
         Method for returning raw venue data for location 'ADDRESS'.
 
@@ -322,7 +325,7 @@ class VipDt:
         print("Menu query operation complete!")
         return menus
 
-    def setMenusDf(self, records=None, drop_na=False, iter_limit=None):
+    def setMenusDf(self, records=None, drop_na=False, iter_limit=None, drop_menus_with=["atering"]):
         """
         A method for extracting a dataframe from 'MENUS' json.
 
@@ -351,11 +354,11 @@ class VipDt:
                                     try:
                                         menu_name = menu['name']
                                     except KeyError:
-                                        menu_name = "no menu title"
+                                        menu_name = "No menu title"
                                     try:
                                         section_name = section['name']
                                     except KeyError:
-                                        section_name = "no section title"
+                                        section_name = "No section title"
                                     try:
                                         item_name = item['name']
                                     except KeyError:
@@ -392,12 +395,23 @@ class VipDt:
                 'section_name', 'item_name', 'item_desc', 'item_price'])
             if drop_na==True:
                 df.dropna(inplace=True)
+            if isinstance(drop_menus_with, list) and len(drop_menus_with)>0:
+                filter_index_list = []
+                for menu_name in df['menu_name'].iteritems():
+                    menu_string = menu_name[1]
+                    for string in drop_menus_with:
+                        if str(string) in menu_string:
+                            filter_index_list += [menu_name[0]]
+                        else:
+                            pass
+                df.drop(filter_index_list, inplace=True)
             self.FS_SUMMARIES['MENUS'] = df
             return df
         except TypeError:
             traceback.print_exc
             print("Error! Failed to create dataframe.")
             pass
+
 
     def getVenuesMap(self, save_map=True):
         """
@@ -471,7 +485,14 @@ class VipDt:
             category_idn = category
             venues = json[category]['venues']
             for venue in venues:
-                venue_name = venue['name']
+                try:
+                    venue_name = venue['name']
+                except:
+                    venue_name = None
+                try:
+                    venue_id = venue['id']
+                except:
+                    venue_id = None
                 try:
                     venue_address = venue['location']['address']
                 except:
@@ -484,17 +505,34 @@ class VipDt:
                     venue_lng = venue['location']['lng']
                 except:
                     venue_lng = None
+                try:
+                    venue_referral_id = venue["referralId"]
+                except:
+                    venue_referral_id = None
+                try:
+                    delivery_provider = venue['delivery']['provider']['name']
+                except:
+                    delivery_provider = None
+                try:
+                    delivery_url = venue['delivery']['url']
+                except:
+                    delivery_url = None
                 venue_list += [{
                     "venue_name": venue_name,
+                    "venue_id": venue_id,
                     "category_idn": category_idn,
                     "venue_address": venue_address,
                     "venue_lat": venue_lat,
-                    "venue_lng": venue_lng
+                    "venue_lng": venue_lng,
+                    "venue_referral_id": venue_referral_id,
+                    "delivery_provider": delivery_provider,
+                    "delivery_url": delivery_url
                 }]
         df = pd.DataFrame.from_records(
             venue_list, index=None, exclude=None, coerce_float=False, 
-            columns=['venue_name','category_idn', 'venue_address', \
-                'venue_lat', 'venue_lng'])
+            columns=['venue_name',"venue_id",'category_idn', 'venue_address', \
+                'venue_lat', 'venue_lng', "venue_referral_id", "delivery_provider", 
+                "delivery_url"])
         self.FS_SUMMARIES['VENUES'] = df
         return df
     
