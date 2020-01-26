@@ -343,6 +343,10 @@ class VipDt:
         bulk_items = []
         for key in records:
             if records[key]['menu']['menus']['count'] > 0:
+                try:
+                    attribution_link = records[key]['menu']['provider']['attributionLink']
+                except:
+                    attribution_link = None
                 menus = records[key]['menu']['menus']['items']
                 for menu in menus:
                     if menu['entries']['count'] > 0:
@@ -371,13 +375,24 @@ class VipDt:
                                         item_price = float(item['price'])
                                     except (KeyError, ValueError):
                                         item_price = None
+                                    attribution = attribution_link
+                                    # try:
+                                    #     root= "https://foursquare.com/v/"
+                                    #     vid= "4b7736edf964a52080882ee3"
+                                    #     ref= "?ref="
+                                    #     cid = CLIENT_ID
+                                    #     params = ("{}{}{}").format(vid,ref,cid)
+                                    #     string_url = ("{}{}").format(root,params)
+                                    # except:
+                                    #     string_url = None
                                     bulk_items += [{
                                         'venue_name': key,
                                         'menu_name': menu_name,
                                         'section_name': section_name,
                                         'item_name': item_name,
                                         'item_desc': item_desc,
-                                        'item_price' : item_price
+                                        'item_price' : item_price,
+                                        'attribution': attribution
                                     }]
                             else:
                                 # print("NO ITEMS IN SECTION", section_name)
@@ -392,7 +407,8 @@ class VipDt:
             df = pd.DataFrame.from_records(
                 bulk_items, index=None, exclude=None, coerce_float=True, 
                 nrows=iter_limit, columns=['venue_name', 'menu_name', 
-                'section_name', 'item_name', 'item_desc', 'item_price'])
+                'section_name', 'item_name', 'item_desc', 'item_price', 
+                'attribution'])
             if drop_na==True:
                 df.dropna(inplace=True)
             if isinstance(drop_menus_with, list) and len(drop_menus_with)>0:
