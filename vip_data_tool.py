@@ -223,7 +223,7 @@ class VipDt:
             + (112500 * data.B19001_014E) + (137500 * data.B19001_015E) 
             + (175000 * data.B19001_016E) + (200000 * data.B19001_017E)) 
             / TRACT_DATA['tractpop100'])
-        ## ATTN! BELOW ARE CALCULATIONS FOR THE DYNAMIC SEARCH RADIUS
+        ## ATTN! BELOW ARE CALCULATIONS FOR DYNAMIC SEARCH RADIUS
         pop = TRACT_DATA['tractpop100']
         fsRadius = (((area/pop)/ 6.28)**3
                     +(AVG_INCOME/pop)**3)**(1/2)+1000.00
