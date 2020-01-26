@@ -487,35 +487,35 @@ class VipDt:
             for venue in venues:
                 try:
                     venue_name = venue['name']
-                except:
+                except KeyError:
                     venue_name = None
                 try:
                     venue_id = venue['id']
-                except:
+                except KeyError:
                     venue_id = None
                 try:
                     venue_address = venue['location']['address']
-                except:
+                except KeyError:
                     venue_address = None
                 try:
                     venue_lat = venue['location']['lat']
-                except:
+                except KeyError:
                     venue_lat = None
                 try:
                     venue_lng = venue['location']['lng']
-                except:
+                except KeyError:
                     venue_lng = None
                 try:
                     venue_referral_id = venue["referralId"]
-                except:
+                except KeyError:
                     venue_referral_id = None
                 try:
                     delivery_provider = venue['delivery']['provider']['name']
-                except:
+                except KeyError:
                     delivery_provider = None
                 try:
                     delivery_url = venue['delivery']['url']
-                except:
+                except KeyError:
                     delivery_url = None
                 venue_list += [{
                     "venue_name": venue_name,
