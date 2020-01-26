@@ -504,7 +504,7 @@ class VipDt:
                     venue_icon = self.FOLIUM_ICONS[category][1]
                     venue_icon_color = self.FOLIUM_ICONS[category][2]
                 except:
-                    venue_icon = glyphicon glyphicon-search
+                    venue_icon = "glyphicon glyphicon-search"
                     venue_icon_color = 'lightred'
                 attribution_url = (
                     "<a href=https://foursquare.com/v/{}>{}</a>").format(
