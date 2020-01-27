@@ -66,38 +66,26 @@ class VipDt:
     
     def __init__(self, address, credentials):
         """Initializes class object parameters."""
-        self.ADDRESS = str(address)
-        self.CREDENTIALS = credentials
-        self.LOCATION_DATA = VipDt.getCensusGeo(self)
-        self.TRACT_DATA = VipDt.getTractValues(self)
-
-        self.FS_JSON = {
-            'VENUES' : None,
-            'MENUS' : None
-        }
-
+        self.ADDRESS = str(address)  # STRING
+        self.CREDENTIALS = credentials  # DICTIONARY
+        self.LOCATION_DATA = VipDt.getCensusGeo(self)  # DICTIONARY
+        self.TRACT_DATA = VipDt.getTractValues(self)  # DICTIONARY
+        self.FS_JSON = {'VENUES':None, 'MENUS':None}
         self.FS_SUMMARIES = {
-            'VENUES' : None,
-            'MENUS' : None,
-            'STATS' : None,
-            'MAP' : None
-        }
-
+            'VENUES':None, 'MENUS':None, 'STATS':None, 'MAP':None
+            }
         self.OUTPUT_LABELS = {
             'pickleLabel' : ("{}.pickle").format(self.ADDRESS),
             'jsonLabel' : ("{}.json").format(self.ADDRESS),
             'xlLabel' : ("{}.xlsx").format(self.ADDRESS),
             'foliumLabel' : ("{}.html").format(self.ADDRESS)
-        }
-
-        #  ## FOLIUM MARKER COLOR CODES BELOW:
-        #  ['red', 'blue', 'green', 'purple', 'orange', 
-        #  'darkred', 'lightred', 'beige', 'darkblue', 
-        #  'darkgreen', 'cadetblue', 'darkpurple', 'white', 
-        #  'pink', 'lightblue', 'lightgreen', 'gray', 
-        #  'black', 'lightgray']
-
+            }
         self.FOLIUM_ICONS = {
+            "COLOR_CODES": [
+                'lightred', 'lightblue', 'lightgreen', 'cadetblue', 
+                'red', 'blue', 'green', 'orange', 'purple', 'pink', 
+                'darkred', 'darkblue', 'darkgreen', 'darkpurple', 
+                'gray', 'lightgray', 'black', 'white', 'beige'],
             "4d4b7104d754a06370d81259": [
                 "Arts & Entertainment", 
                 "glyphicon glyphicon-music",
@@ -141,9 +129,6 @@ class VipDt:
             }
 
             
-
-        
-    
     @staticmethod
     def getJsonTokens(file_name="credentials.json"):
         """
