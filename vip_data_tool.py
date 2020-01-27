@@ -372,7 +372,7 @@ class VipDt:
                 try:
                     vid= str(venue_id)
                     string_url = ("https://foursquare.com/v/{}").format(vid)
-                    # ## FOURSQUARE REFERRAL WITH CLIENT_ID
+                    # ## CODE FOR FOURSQUARE REFERRAL WITH CLIENT_ID
                     # cid = self.CREDENTIALS['fsid']
                     # string_url = ("https://foursquare.com/v/{}&ref={}").format(vid,cid)
                 except:
@@ -432,7 +432,7 @@ class VipDt:
                     venue_icon_color = self.FOLIUM_ICONS[category][2]
                 except KeyError:
                     venue_icon = "glyphicon glyphicon-search"
-                    venue_icon_color = 'lightred'
+                    venue_icon_color = 'lightblue'
                 attribution_url = (
                     "<a href=https://foursquare.com/v/{}>{}</a>").format(
                         venue_id, 
