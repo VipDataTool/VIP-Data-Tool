@@ -101,11 +101,11 @@ class VipDt:
             "4d4b7105d754a06374d81259": [
                 "Food", 
                 "glyphicon glyphicon-cutlery",
-                "lightred"],
+                "red"],
             "4d4b7105d754a06376d81259": [
                 "Nightlife Spot", 
                 "glyphicon glyphicon-glass",
-                "lightblue"],
+                "blue"],
             "4d4b7105d754a06377d81259": [
                 "Outdoors & Recreation", 
                 "glyphicon glyphicon-tree-conifer",
