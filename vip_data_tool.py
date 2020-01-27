@@ -93,8 +93,9 @@ class VipDt:
                     "darkblue"],
                 "4d4b7105d754a06372d81259": [
                     "College & University", 
-                    "glyphicon glyphicon-education",
-                    "darkred"],
+                    # "glyphicon glyphicon-education",
+                    "glyphicon glyphicon-pencil",
+                    "lightred"],
                 "4d4b7105d754a06373d81259": [
                     "Event", 
                     "glyphicon glyphicon-calendar",
@@ -114,11 +115,11 @@ class VipDt:
                 "4d4b7105d754a06375d81259": [
                     "Professional & Other Places", 
                     "glyphicon glyphicon-envelope",
-                    "gray"],
+                    "lightgray"],
                 "4e67e38e036454776db1fb3a": [
                     "Residence", 
                     "glyphicon glyphicon-home",
-                    "beige"],
+                    "gray"],
                 "4d4b7105d754a06378d81259": [
                     "Shop & Service", 
                     "glyphicon glyphicon-shopping-cart",
