@@ -280,7 +280,7 @@ class VipDt:
                               '4d4b7105d754a06374d81259']):
         ## 'Nightlife' ID: "4d4b7105d754a06376d81259"
         ## 'Food' ID:'4d4b7105d754a06374d81259'                      
-        ## 'Pizza Place' ID: '4bf58dd8d48988d1ca941735
+        ## 'Pizza Place' ID: '4bf58dd8d48988d1ca941735'
         """
         Method for returning raw venue data for location 'ADDRESS'.
 
