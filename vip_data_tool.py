@@ -301,9 +301,6 @@ class VipDt:
 
         See Foursquare API docs for more details.
         """
-        client = foursquare.Foursquare(
-            client_id = self.CREDENTIALS['fsid'], 
-            client_secret = self.CREDENTIALS['fssecret'])
         if radius is None:
             radius = self.TRACT_DATA['RADIUS']
         if isinstance(latlng,str):
@@ -312,6 +309,9 @@ class VipDt:
             coords = tuple(self.LOCATION_DATA['json']['result']\
                 ['addressMatches'][0]['coordinates'].values())
             ll = ("{},{}").format(coords[1],coords[0])
+        client = foursquare.Foursquare(
+            client_id = self.CREDENTIALS['fsid'], 
+            client_secret = self.CREDENTIALS['fssecret'])
         responses ={}
         for category in categories:
             params = {
