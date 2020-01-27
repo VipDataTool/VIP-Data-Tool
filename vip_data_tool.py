@@ -86,46 +86,48 @@ class VipDt:
                 'red', 'blue', 'green', 'orange', 'purple', 'pink', 
                 'darkred', 'darkblue', 'darkgreen', 'darkpurple', 
                 'gray', 'lightgray', 'black', 'white', 'beige'],
-            "4d4b7104d754a06370d81259": [
-                "Arts & Entertainment", 
-                "glyphicon glyphicon-music",
-                "darkblue"],
-            "4d4b7105d754a06372d81259": [
-                "College & University", 
-                "glyphicon glyphicon-education",
-                "darkred"],
-            "4d4b7105d754a06373d81259": [
-                "Event", 
-                "glyphicon glyphicon-calendar",
-                "purple"],
-            "4d4b7105d754a06374d81259": [
-                "Food", 
-                "glyphicon glyphicon-cutlery",
-                "red"],
-            "4d4b7105d754a06376d81259": [
-                "Nightlife Spot", 
-                "glyphicon glyphicon-glass",
-                "blue"],
-            "4d4b7105d754a06377d81259": [
-                "Outdoors & Recreation", 
-                "glyphicon glyphicon-tree-conifer",
-                "lightgreen"],
-            "4d4b7105d754a06375d81259": [
-                "Professional & Other Places", 
-                "glyphicon glyphicon-envelope",
-                "gray"],
-            "4e67e38e036454776db1fb3a": [
-                "Residence", 
-                "glyphicon glyphicon-home",
-                "beige"],
-            "4d4b7105d754a06378d81259": [
-                "Shop & Service", 
-                "glyphicon glyphicon-shopping-cart",
-                "orange"],
-            "4d4b7105d754a06379d81259": [
-                "Travel & Transport", 
-                "glyphicon glyphicon-plane",
-                "cadetblue"]
+            "CATEGORIES":{
+                "4d4b7104d754a06370d81259": [
+                    "Arts & Entertainment", 
+                    "glyphicon glyphicon-music",
+                    "darkblue"],
+                "4d4b7105d754a06372d81259": [
+                    "College & University", 
+                    "glyphicon glyphicon-education",
+                    "darkred"],
+                "4d4b7105d754a06373d81259": [
+                    "Event", 
+                    "glyphicon glyphicon-calendar",
+                    "purple"],
+                "4d4b7105d754a06374d81259": [
+                    "Food", 
+                    "glyphicon glyphicon-cutlery",
+                    "red"],
+                "4d4b7105d754a06376d81259": [
+                    "Nightlife Spot", 
+                    "glyphicon glyphicon-glass",
+                    "blue"],
+                "4d4b7105d754a06377d81259": [
+                    "Outdoors & Recreation", 
+                    "glyphicon glyphicon-tree-conifer",
+                    "lightgreen"],
+                "4d4b7105d754a06375d81259": [
+                    "Professional & Other Places", 
+                    "glyphicon glyphicon-envelope",
+                    "gray"],
+                "4e67e38e036454776db1fb3a": [
+                    "Residence", 
+                    "glyphicon glyphicon-home",
+                    "beige"],
+                "4d4b7105d754a06378d81259": [
+                    "Shop & Service", 
+                    "glyphicon glyphicon-shopping-cart",
+                    "orange"],
+                "4d4b7105d754a06379d81259": [
+                    "Travel & Transport", 
+                    "glyphicon glyphicon-plane",
+                    "cadetblue"]
+                }
             }
 
             
@@ -427,8 +429,8 @@ class VipDt:
                 venue_lat = venue['location']['lat']
                 venue_lng = venue['location']['lng']
                 try:
-                    venue_icon = self.FOLIUM_ICONS[category][1]
-                    venue_icon_color = self.FOLIUM_ICONS[category][2]
+                    venue_icon = self.FOLIUM_ICONS['CATEGORIES'][category][1]
+                    venue_icon_color = self.FOLIUM_ICONS['CATEGORIES'][category][2]
                 except KeyError:
                     venue_icon = "glyphicon glyphicon-search"
                     venue_icon_color = 'lightblue'
