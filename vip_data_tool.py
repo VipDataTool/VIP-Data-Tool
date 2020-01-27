@@ -32,17 +32,12 @@ import pandas as pd
 import scipy.stats
 import requests
 import folium
-import numpy as np        
+import numpy as np
 
 pd.set_option('display.precision', 2)
 pd.set_option('display.max_rows', 1000)
 pd.set_option('display.max_columns', 50)
-# pd.set_option('display.width', 150)
-
 print("Dependencies imported.")
-
-
-__version__ = '0.9.0'
 
 
 class VipDt:
@@ -62,10 +57,11 @@ class VipDt:
             "fssecret" : "Valid Foursquare Client Secret",  
             "censuskey" : "Valid US Census API Key"
         }
-    """ 
-    
+    """
+
     def __init__(self, address, credentials):
         """Initializes class object parameters."""
+        __version__ = '1.0.1'
         self.ADDRESS = str(address)  # STRING
         self.CREDENTIALS = credentials  # DICTIONARY
         self.LOCATION_DATA = VipDt.getCensusGeo(self)  # DICTIONARY
@@ -93,9 +89,8 @@ class VipDt:
                     "darkblue"],
                 "4d4b7105d754a06372d81259": [
                     "College & University", 
-                    # "glyphicon glyphicon-education",
                     "glyphicon glyphicon-pencil",
-                    "lightred"],
+                    "orange"],
                 "4d4b7105d754a06373d81259": [
                     "Event", 
                     "glyphicon glyphicon-calendar",
@@ -111,7 +106,7 @@ class VipDt:
                 "4d4b7105d754a06377d81259": [
                     "Outdoors & Recreation", 
                     "glyphicon glyphicon-tree-conifer",
-                    "lightgreen"],
+                    "green"],
                 "4d4b7105d754a06375d81259": [
                     "Professional & Other Places", 
                     "glyphicon glyphicon-envelope",
@@ -123,13 +118,14 @@ class VipDt:
                 "4d4b7105d754a06378d81259": [
                     "Shop & Service", 
                     "glyphicon glyphicon-shopping-cart",
-                    "orange"],
+                    "pink"],
                 "4d4b7105d754a06379d81259": [
                     "Travel & Transport", 
                     "glyphicon glyphicon-plane",
                     "cadetblue"]
                 }
             }
+        print("Version:", __version__,"Object initialized.")
 
             
     @staticmethod
