@@ -278,9 +278,8 @@ class VipDt:
                   intent="browse", limit=50, 
                   categories=['4d4b7105d754a06376d81259', 
                               '4d4b7105d754a06374d81259']):
-        ## 'Nightlife' ID: "4d4b7105d754a06376d81259"
-        ## 'Food' ID:'4d4b7105d754a06374d81259'                      
-        ## 'Pizza Place' ID: '4bf58dd8d48988d1ca941735'
+        ## 'Nightlife' CATEGORY ID: "4d4b7105d754a06376d81259"
+        ## 'Food' CATEGORY ID:'4d4b7105d754a06374d81259'                      
         """
         Method for returning raw venue data for location 'ADDRESS'.
 
