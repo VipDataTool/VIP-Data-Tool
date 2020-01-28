@@ -61,7 +61,7 @@ class VipDt:
 
     def __init__(self, address, credentials):
         """Initializes class object parameters."""
-        __version__ = '1.0.1'
+        self.__version__ = '1.0.1'
         self.ADDRESS = str(address)  # STRING
         self.CREDENTIALS = credentials  # DICTIONARY
         self.LOCATION_DATA = VipDt.getCensusGeo(self)  # DICTIONARY
@@ -125,7 +125,7 @@ class VipDt:
                     "cadetblue"]
                 }
             }
-        print("Version:", __version__,"Object initialized.")
+        print("Version:", self.__version__,"Object initialized.")
 
             
     @staticmethod

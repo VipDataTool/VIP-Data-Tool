@@ -45,6 +45,8 @@ credential
 *.docx
 *.doc
 *.pdf
+*.txt
+*.csv
 
 # Pycache files
 *.pyc
