@@ -275,9 +275,7 @@ class VipDt:
     def getVenues(self, latlng=None, query="", radius=None,  
                   intent="browse", limit=50, 
                   categories=['4d4b7105d754a06376d81259', 
-                              '4d4b7105d754a06374d81259']):
-        ## 'Nightlife' CATEGORY ID: "4d4b7105d754a06376d81259"
-        ## 'Food' CATEGORY ID:'4d4b7105d754a06374d81259'                      
+                              '4d4b7105d754a06374d81259']):                
         """
         Method for returning raw venue data for location 'ADDRESS'.
 
@@ -293,11 +291,15 @@ class VipDt:
          "browse" by default. 
         limit: int
          the limit of responses, 1-50 max
-        categories: list
-         a list of category string values to filter or expand results
+        categories: str, list
+         a category id number as string value,
+         the keyword 'all' searches all keys in VENUE_CATEGORIES,
+         a list of category id numbers to search
 
-        See Foursquare API docs for more details.
+        See Foursquare API docs for more details on query parameters.
         """
+        ## 'Nightlife' CATEGORY ID: "4d4b7105d754a06376d81259"
+        ## 'Food' CATEGORY ID:'4d4b7105d754a06374d81259'  
         if radius is None:
             radius = self.TRACT_DATA['RADIUS']
         if isinstance(latlng,str):
@@ -306,8 +308,12 @@ class VipDt:
             coords = tuple(self.LOCATION_DATA['json']['result']\
                 ['addressMatches'][0]['coordinates'].values())
             ll = ("{},{}").format(coords[1],coords[0])
-        if isinstance(categories,str) and categories=="all":
+        if isinstance(categories,str):
+            categories = [categories]
+        elif isinstance(categories,str) and categories=="all":
             categories = list(self.VENUE_CATEGORIES['CATEGORIES'].keys())
+        else:
+            pass
         client = foursquare.Foursquare(
             client_id = self.CREDENTIALS['fsid'], 
             client_secret = self.CREDENTIALS['fssecret'])
@@ -369,9 +375,10 @@ class VipDt:
                 except KeyError:
                     delivery_url = None
                 try:
-                    vid= str(venue_id)
+                    # ## CODE FOR FOURSQUARE REFERRAL WITHOUT CLIENT_ID:
+                    vid = str(venue_id)
                     string_url = ("https://foursquare.com/v/{}").format(vid)
-                    # ## CODE FOR FOURSQUARE REFERRAL WITH CLIENT_ID
+                    # ## CODE FOR FOURSQUARE REFERRAL WITH CLIENT_ID:
                     # cid = self.CREDENTIALS['fsid']
                     # string_url = ("https://foursquare.com/v/{}&ref={}").format(vid,cid)
                 except:
