@@ -375,10 +375,10 @@ class VipDt:
                 except KeyError:
                     delivery_url = None
                 try:
-                    # ## CODE FOR FOURSQUARE REFERRAL WITHOUT CLIENT_ID:
+                    ## CODE FOR FOURSQUARE REFERRAL WITHOUT CLIENT_ID:
                     vid = str(venue_id)
                     string_url = ("https://foursquare.com/v/{}").format(vid)
-                    # ## CODE FOR FOURSQUARE REFERRAL WITH CLIENT_ID:
+                    ## CODE FOR FOURSQUARE REFERRAL WITH CLIENT_ID:
                     # cid = self.CREDENTIALS['fsid']
                     # string_url = ("https://foursquare.com/v/{}&ref={}").format(vid,cid)
                 except:
