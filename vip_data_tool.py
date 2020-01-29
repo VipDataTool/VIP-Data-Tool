@@ -476,7 +476,7 @@ class VipDt:
         """
         Description
         -----------
-        A method for returning raw menu data.
+        A method for returning venue menu query response data.
 
         Parameters
         ----------
