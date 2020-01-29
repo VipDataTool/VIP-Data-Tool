@@ -298,7 +298,6 @@ class VipDt:
 
         See Foursquare API docs for more details on query parameters.
         """
-         
         if radius is None:
             radius = self.TRACT_DATA['RADIUS']
         if isinstance(latlng,str):
