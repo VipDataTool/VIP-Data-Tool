@@ -42,13 +42,15 @@ print("Dependencies imported.")
 
 class VipDt:
     """
+    Description
+    -----------
     A collection of methods for returning venue data for 
     a given US address from the Foursquare Places API.
 
     Parameters
     ----------
     address: str
-        A real address for a particular location,
+        A real address for a given location.
     credentials: dict
         Key-value pairs for the following credentials: 
             {"fsid": "Valid Foursquare Client Id",
@@ -130,6 +132,8 @@ class VipDt:
     @staticmethod
     def getJsonTokens(file_name="credentials.json"):
         """
+        Description
+        -----------
         A method for reconstituting previously serialized JSON data.
 
         Parameters
@@ -147,9 +151,10 @@ class VipDt:
     def getCensusGeo(self, options={
                             'benchmark':"Public_AR_Census2010",
                             'vintage':"Census2010_Census2010",
-                            'layers':"08", 
-                            'format':"json"}):
+                            'layers':"08"}):
         """
+        Description
+        -----------
         Returns geo data from the US Census Bureau for a given address.
 
         Parameters
@@ -162,7 +167,7 @@ class VipDt:
         _benchmark = str(options['benchmark'])
         _vintage = str(options['vintage'])
         _layers = str(options['layers'])
-        _format = str(options['format'])
+        _format = "json"
         _key = self.CREDENTIALS['censuskey']
         base_url = "https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress?"
         params = ("address={}&benchmark={}&vintage={}&layers={}&format={}&key={}").format(
@@ -174,6 +179,8 @@ class VipDt:
     
     def getTractValues(self):
         """
+        Description
+        -----------
         Returns demographic data for a given US Census tract.
         """
         json = self.LOCATION_DATA['json']
@@ -277,6 +284,8 @@ class VipDt:
                   intent="browse", limit=50, 
                   categories=None):                
         """
+        Description
+        -----------
         Method for returning raw venue data for 'ADDRESS'.
 
         Parameters
@@ -336,6 +345,8 @@ class VipDt:
 
     def setVenuesDf(self):
         """
+        Description
+        -----------
         A method for extracting a dataframe of from 'VENUES' json.
         """
         json = self.FS_JSON['VENUES']
@@ -407,12 +418,14 @@ class VipDt:
 
     def getVenuesMap(self, save_map=True):
         """
+        Description
+        -----------
         A method for creating a Folium map from 'VENUES' json.
 
         Parameters
         ----------
         save_map: bool
-            Indicates whether to save a venue location map as html.
+            Indicates whether to output the venue location map as an html.
         """
         venue_data = self.FS_JSON['VENUES']
         search_address = self.LOCATION_DATA['json']['result']\
@@ -461,6 +474,8 @@ class VipDt:
 
     def getMenus(self,venues=None):
         """
+        Description
+        -----------
         A method for returning raw menu data.
 
         Parameters
@@ -495,6 +510,8 @@ class VipDt:
 
     def setMenusDf(self, records=None, drop_na=False, iter_limit=None, drop_menus_with=[]):
         """
+        Description
+        -----------
         A method for extracting a dataframe from 'MENUS' json.
 
         Parameters
@@ -589,6 +606,8 @@ class VipDt:
 
     def getMenuStats(self, menus=None, confidence=0.99):
         """
+        Description
+        -----------
         Returns a dictionary of dataframes with descriptive 'price' analyses.
 
         Parameters
@@ -616,30 +635,55 @@ class VipDt:
         self.FS_SUMMARIES['STATS'] = menuStats
         return menuStats
 
-    def setPickle(self):
-        """
-        Method for serializing the current instance. LESS SECURE THAN JSON.
+    # def setPickle(self):
+    #     """
+    #     Method for serializing the current instance. LESS SECURE THAN JSON.
         
-        Parameters
-        ----------
-        pickle_name: str
-            A file name for the pickled instance
-        """
-        try:
-            pickle_name = self.OUTPUT_LABELS['pickleLabel']
-            self.FS_SUMMARIES['MAP'] = None  # Cuz cannot serialize folium objects.
-            with open(pickle_name, 'wb') as f:
-                pickle.dump(self, f)
-            f.close()
-            print(pickle_name, "serialized!")
-            return pickle_name
-        except:
-            print("ERROR!", pickle_name, "NOT serialized!")
-            traceback.print_exc()
-            return
+    #     Parameters
+    #     ----------
+    #     pickle_name: str
+    #         A file name for the pickled instance
+    #     """
+    #     try:
+    #         pickle_name = self.OUTPUT_LABELS['pickleLabel']
+    #         self.FS_SUMMARIES['MAP'] = None  # Cuz cannot serialize folium objects.
+    #         with open(pickle_name, 'wb') as f:
+    #             pickle.dump(self, f)
+    #         f.close()
+    #         print(pickle_name, "serialized!")
+    #         return pickle_name
+    #     except:
+    #         print("ERROR!", pickle_name, "NOT serialized!")
+    #         traceback.print_exc()
+    #         return
+
+    # @staticmethod
+    # def getPickle(file_name):
+    #     """
+    #     Method for deserializing an instance. LESS SECURE THAN JSON.
+        
+    #     Parameters
+    #     ----------
+    #     file_name: str
+    #         A file name for retrieving pickled objects.
+    #     """
+    #     pickleName = file_name
+    #     try:
+    #         with open(pickleName, 'rb') as f:
+    #             data = pickle.load(f)
+    #             f.close()
+    #         print(pickleName, "found!")
+    #         return data
+    #     except:
+    #         print("ERROR!", pickleName, "file NOT found!")
+    #         traceback.print_exc()
+    #         return
+
 
     def setJson(self):
         """
+        Description
+        -----------
         A method for serializing data from the current instance.
         
         Parameters
@@ -653,32 +697,12 @@ class VipDt:
             json.dump(data, f)
             f.close()
         print(jsonName, "JSON file created!")    
-        return data   
-
-    @staticmethod
-    def getPickle(file_name):
-        """
-        Method for deserializing an instance. LESS SECURE THAN JSON.
-        
-        Parameters
-        ----------
-        file_name: str
-            A file name for retrieving pickled objects.
-        """
-        pickleName = file_name
-        try:
-            with open(pickleName, 'rb') as f:
-                data = pickle.load(f)
-                f.close()
-            print(pickleName, "found!")
-            return data
-        except:
-            print("ERROR!", pickleName, "file NOT found!")
-            traceback.print_exc()
-            return
+        return data 
 
     def getJson(self, file_name):
         """
+        Description
+        -----------
         A method for reconstituting previously serialized JSON data.
 
         Parameters
@@ -692,6 +716,7 @@ class VipDt:
             f.close()
             print(jsonName, "found!")
         value = json.load(data)
+        # location=
         venues = pd.read_json(value["VENUES"])
         menus = pd.read_json(value["MENUS"])
         payload = {"VENUES": venues, "MENUS": menus}
@@ -700,6 +725,8 @@ class VipDt:
 
     def stats2Excel(self, sheets=None):
         """
+        Description
+        -----------
         A method for exporting instance data as a spreadsheet.
         
         Parameters
@@ -729,6 +756,8 @@ class VipDt:
     @staticmethod
     def start(address=None, credentials=None):
         """
+        Description
+        -----------
         A method for automatically populating an instance with data.
         
         Parameters
