@@ -299,11 +299,11 @@ class VipDt:
         intent: str
             Set to "browse" by default. 
         limit: int
-            The limit of responses, 1-50 max.
+            The max limit of responses, 1-50 max.
         categories: str, list
-            A category id number as string value,
-            the argument 'all' searches every key in VENUE_CATEGORIES,
-            or a list of category id numbers to search.
+            Accepts a 'category id' as a string value,
+            or 'all' to search each key in VENUE_CATEGORIES,
+            or a list of specific 'category id' numbers to search.
 
         See Foursquare API docs for more details on query parameters.
         """
@@ -391,6 +391,7 @@ class VipDt:
                     vid = str(venue_id)
                     ## CODE FOR FOURSQUARE REFERRAL WITHOUT CLIENT_ID:
                     string_url = ("https://foursquare.com/v/{}").format(vid)
+                    
                     ## CODE FOR FOURSQUARE REFERRAL WITH CLIENT_ID:
                     # cid = self.CREDENTIALS['fsid']
                     # string_url = ("https://foursquare.com/v/{}&ref={}").format(vid,cid)
