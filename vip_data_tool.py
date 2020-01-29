@@ -301,9 +301,9 @@ class VipDt:
         limit: int
             The limit of responses, 1-50 max.
         categories: str, list
-            A category id number as string value.
-            The keyword 'all' searches all keys in VENUE_CATEGORIES.
-            A list of category id numbers to search.
+            A category id number as string value,
+            the argument 'all' searches every key in VENUE_CATEGORIES,
+            or a list of category id numbers to search.
 
         See Foursquare API docs for more details on query parameters.
         """
@@ -347,7 +347,7 @@ class VipDt:
         """
         Description
         -----------
-        A method for extracting a dataframe of from 'VENUES' json.
+            A method for extracting a dataframe of from 'VENUES' json.
         """
         json = self.FS_JSON['VENUES']
         venue_list = []
