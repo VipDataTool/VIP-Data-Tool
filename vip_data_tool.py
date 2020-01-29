@@ -613,7 +613,7 @@ class VipDt:
         Parameters
         ----------
         menus: list
-            A list of menu query json responses
+            A list of menu query json responses.
         confidence: float
             A confidence interval between 0 and 1 for 'bayes_mvs' method.
         """
@@ -689,7 +689,7 @@ class VipDt:
         Parameters
         ----------
         jsonName: str
-            A file name for storing json objects
+            A file name for storing json objects.
         """
         jsonName = self.OUTPUT_LABELS['jsonLabel']
         data = self.FS_JSON
@@ -763,7 +763,7 @@ class VipDt:
         Parameters
         ----------
         address: str
-            A real address for a particular location
+            A real address for a particular location.
         credentials: dict
             Key-value pairs for the following credentials: 
                 {"fsid": "Valid Foursquare client Id",  
