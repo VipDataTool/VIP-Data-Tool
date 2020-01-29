@@ -76,7 +76,7 @@ class VipDt:
             'xlLabel' : ("{}.xlsx").format(self.ADDRESS),
             'foliumLabel' : ("{}.html").format(self.ADDRESS)
             }
-        self.FOLIUM_ICONS = {
+        self.VENUE_CATEGORIES = {
             "COLOR_CODES": [
                 'lightred', 'lightblue', 'lightgreen', 'cadetblue', 
                 'red', 'blue', 'green', 'orange', 'purple', 'pink', 
@@ -125,7 +125,7 @@ class VipDt:
                     "cadetblue"]
                 }
             }
-        print("Version:", self.__version__,"Object initialized.")
+        print("Version:", self.__version__,"... Object initialized.")
 
             
     @staticmethod
@@ -145,12 +145,11 @@ class VipDt:
             print(jsonName, "found!")
         return data
 
-    def getCensusGeo(self,
-                     options={
-                         'benchmark':"Public_AR_Census2010",
-                         'vintage':"Census2010_Census2010",
-                         'layers':"08", 
-                         'format':"json"}):
+    def getCensusGeo(self, options={
+                            'benchmark':"Public_AR_Census2010",
+                            'vintage':"Census2010_Census2010",
+                            'layers':"08", 
+                            'format':"json"}):
         """
         Returns geo data from the US Census Bureau for a given address.
 
@@ -307,6 +306,8 @@ class VipDt:
             coords = tuple(self.LOCATION_DATA['json']['result']\
                 ['addressMatches'][0]['coordinates'].values())
             ll = ("{},{}").format(coords[1],coords[0])
+        if isinstance(categories,str) and categories=="all":
+            categories = list(self.VENUE_CATEGORIES['CATEGORIES'].keys())
         client = foursquare.Foursquare(
             client_id = self.CREDENTIALS['fsid'], 
             client_secret = self.CREDENTIALS['fssecret'])
@@ -426,8 +427,8 @@ class VipDt:
                 venue_lat = venue['location']['lat']
                 venue_lng = venue['location']['lng']
                 try:
-                    venue_icon = self.FOLIUM_ICONS['CATEGORIES'][category][1]
-                    venue_icon_color = self.FOLIUM_ICONS['CATEGORIES'][category][2]
+                    venue_icon = self.VENUE_CATEGORIES['CATEGORIES'][category][1]
+                    venue_icon_color = self.VENUE_CATEGORIES['CATEGORIES'][category][2]
                 except KeyError:
                     venue_icon = "glyphicon glyphicon-search"
                     venue_icon_color = 'lightblue'
