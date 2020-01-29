@@ -135,7 +135,7 @@ class VipDt:
         Parameters
         ----------
         file_name: str
-            a json file name for retrieving credentials.
+            A json file name for retrieving credentials.
         """
         jsonName = file_name
         with open(jsonName,"r") as f:
@@ -155,7 +155,7 @@ class VipDt:
         Parameters
         ----------
         options: dict
-            contents include base parameters for accessing the US CENSUS BUREAU API
+            Contents include base parameters for accessing the US CENSUS BUREAU API
             at an endpoint hard coded into the method for security purposes.
         """
         _address = str(self.ADDRESS)
@@ -283,17 +283,17 @@ class VipDt:
         Parameters
         ----------
         latlng: str
-            latitude,longitude as comma-separated string values
+            Latitude, longitude as a comma-separated string values
         query: str
-            a value to filter results
+            A value to filter results
         radius: float, int
-            a search radius in meters
+            A search radius in meters
         intent: str
-            "browse" by default. 
+            Set to "browse" by default. 
         limit: int
-            the limit of responses, 1-50 max
+            The limit of responses, 1-50 max.
         categories: str, list
-            a category id number as string value,
+            A category id number as string value,
             the keyword 'all' searches all keys in VENUE_CATEGORIES,
             a list of category id numbers to search
 
@@ -411,7 +411,7 @@ class VipDt:
         Parameters
         ----------
         save_map: bool
-            indicates whether to save a venue location map as html
+            Indicates whether to save a venue location map as html
         """
         venue_data = self.FS_JSON['VENUES']
         search_address = self.LOCATION_DATA['json']['result']\
@@ -465,7 +465,7 @@ class VipDt:
         Parameters
         ----------
         venues: list
-            a list of venue id numbers to query for menu data
+            A list of venue id numbers to query for menu data.
         """
         if venues is None:
             venues_dict = self.FS_JSON['VENUES']
@@ -499,11 +499,11 @@ class VipDt:
         Parameters
         ----------
         records: list
-            a list of menu query responses
+            A list of menu query responses.
         drop_na: bool
-            whether to drop NoneTypes from dataframe, False by default 
+            Drops 'NoneTypes' from dataframe. 'False' by default.   
         iter_limit: int
-            the number of maximum observations per dataframe
+            Maximum number of observations per dataframe. 'None' by default.
         """
         if records is None:
             records = self.FS_JSON['MENUS']
@@ -593,9 +593,9 @@ class VipDt:
         Parameters
         ----------
         menus: list
-            a list of menu query json responses
+            A list of menu query json responses
         confidence: float
-            a confidence interval between 0 and 1 for 'bayes_mvs' method.
+            A confidence interval between 0 and 1 for 'bayes_mvs' method.
         """
         menu_df = self.FS_SUMMARIES['MENUS']
         if menus is not None:
@@ -622,7 +622,7 @@ class VipDt:
         Parameters
         ----------
         pickle_name: str
-            a file name for the pickled instance
+            A file name for the pickled instance
         """
         try:
             pickle_name = self.OUTPUT_LABELS['pickleLabel']
@@ -644,7 +644,7 @@ class VipDt:
         Parameters
         ----------
         jsonName: str
-            a file name for storing json objects
+            A file name for storing json objects
         """
         jsonName = self.OUTPUT_LABELS['jsonLabel']
         data = self.FS_JSON
@@ -662,7 +662,7 @@ class VipDt:
         Parameters
         ----------
         file_name: str
-            a file name for retrieving pickled objects.
+            A file name for retrieving pickled objects.
         """
         pickleName = file_name
         try:
@@ -683,7 +683,7 @@ class VipDt:
         Parameters
         ----------
         file_name: str
-            a file name for retrieving json objects.
+            A file name for retrieving json objects.
         """
         jsonName = file_name
         with open(jsonName, "r") as f:
@@ -704,7 +704,7 @@ class VipDt:
         Parameters
         ----------
         sheets: dict
-            a dict of dataframe objects from 'FS_SUMMARIES['STATS']'.
+            A dict of dataframe objects from 'FS_SUMMARIES['STATS']'.
         """
         if sheets is None:
             sheets = self.FS_SUMMARIES['STATS']
@@ -733,7 +733,7 @@ class VipDt:
         Parameters
         ----------
         address: str
-            a real address for a particular location
+            A real address for a particular location
         credentials: dict
             Key-value pairs for the following credentials: 
                 {"fsid": "Valid Foursquare client Id",  
