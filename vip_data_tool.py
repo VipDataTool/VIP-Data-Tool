@@ -44,8 +44,8 @@ class VipDt:
     """
     Description
     -----------
-    A collection of methods for returning venue data for 
-    a given US address from the Foursquare Places API.
+        A collection of methods for returning venue data for 
+        a given US address from the Foursquare Places API.
 
     Parameters
     ----------
@@ -60,7 +60,9 @@ class VipDt:
 
     def __init__(self, address, credentials):
         """
-        Initializes class object parameters.
+        Description
+        -----------
+            Initializes class object parameters.
         """
         self.__version__ = '1.0.1'
         self.ADDRESS = str(address)  # STRING
@@ -134,7 +136,7 @@ class VipDt:
         """
         Description
         -----------
-        A method for reconstituting previously serialized JSON data.
+            A method for reconstituting previously serialized JSON data.
 
         Parameters
         ----------
@@ -155,7 +157,7 @@ class VipDt:
         """
         Description
         -----------
-        Returns geo data from the US Census Bureau for a given address.
+            Returns geo data from the US Census Bureau for a given address.
 
         Parameters
         ----------
@@ -181,7 +183,7 @@ class VipDt:
         """
         Description
         -----------
-        Returns demographic data for a given US Census tract.
+            Returns demographic data for a given US Census tract.
         """
         json = self.LOCATION_DATA['json']
         tract_id = json['result']['addressMatches'][0]\
@@ -286,7 +288,7 @@ class VipDt:
         """
         Description
         -----------
-        Method for returning raw venue data for 'ADDRESS'.
+            Method for returning raw venue data for 'ADDRESS'.
 
         Parameters
         ----------
@@ -391,7 +393,7 @@ class VipDt:
                     vid = str(venue_id)
                     ## CODE FOR FOURSQUARE REFERRAL WITHOUT CLIENT_ID:
                     string_url = ("https://foursquare.com/v/{}").format(vid)
-                    
+
                     ## CODE FOR FOURSQUARE REFERRAL WITH CLIENT_ID:
                     # cid = self.CREDENTIALS['fsid']
                     # string_url = ("https://foursquare.com/v/{}&ref={}").format(vid,cid)
@@ -421,7 +423,7 @@ class VipDt:
         """
         Description
         -----------
-        A method for creating a Folium map from 'VENUES' json.
+            A method for creating a Folium map from 'VENUES' json.
 
         Parameters
         ----------
@@ -477,7 +479,7 @@ class VipDt:
         """
         Description
         -----------
-        A method for returning venue menu query response data.
+            A method for returning venue menu query response data.
 
         Parameters
         ----------
@@ -513,7 +515,7 @@ class VipDt:
         """
         Description
         -----------
-        A method for extracting a dataframe from 'MENUS' json.
+            A method for extracting a dataframe from 'MENUS' json.
 
         Parameters
         ----------
@@ -609,7 +611,7 @@ class VipDt:
         """
         Description
         -----------
-        Returns a dictionary of dataframes with descriptive 'price' analyses.
+            Returns a dictionary of dataframes with descriptive 'price' analyses.
 
         Parameters
         ----------
@@ -636,56 +638,11 @@ class VipDt:
         self.FS_SUMMARIES['STATS'] = menuStats
         return menuStats
 
-    # def setPickle(self):
-    #     """
-    #     Method for serializing the current instance. LESS SECURE THAN JSON.
-        
-    #     Parameters
-    #     ----------
-    #     pickle_name: str
-    #         A file name for the pickled instance
-    #     """
-    #     try:
-    #         pickle_name = self.OUTPUT_LABELS['pickleLabel']
-    #         self.FS_SUMMARIES['MAP'] = None  # Cuz cannot serialize folium objects.
-    #         with open(pickle_name, 'wb') as f:
-    #             pickle.dump(self, f)
-    #         f.close()
-    #         print(pickle_name, "serialized!")
-    #         return pickle_name
-    #     except:
-    #         print("ERROR!", pickle_name, "NOT serialized!")
-    #         traceback.print_exc()
-    #         return
-
-    # @staticmethod
-    # def getPickle(file_name):
-    #     """
-    #     Method for deserializing an instance. LESS SECURE THAN JSON.
-        
-    #     Parameters
-    #     ----------
-    #     file_name: str
-    #         A file name for retrieving pickled objects.
-    #     """
-    #     pickleName = file_name
-    #     try:
-    #         with open(pickleName, 'rb') as f:
-    #             data = pickle.load(f)
-    #             f.close()
-    #         print(pickleName, "found!")
-    #         return data
-    #     except:
-    #         print("ERROR!", pickleName, "file NOT found!")
-    #         traceback.print_exc()
-    #         return
-
-
     def setJson(self):
         """
         Description
         -----------
-        A method for serializing data from the current instance.
+            A method for serializing data from the current instance.
         
         Parameters
         ----------
@@ -704,7 +661,7 @@ class VipDt:
         """
         Description
         -----------
-        A method for reconstituting previously serialized JSON data.
+            A method for reconstituting previously serialized JSON data.
 
         Parameters
         ----------
@@ -728,7 +685,7 @@ class VipDt:
         """
         Description
         -----------
-        A method for exporting instance data as a spreadsheet.
+            A method for exporting instance data as a spreadsheet.
         
         Parameters
         ----------
@@ -759,7 +716,7 @@ class VipDt:
         """
         Description
         -----------
-        A method for automatically populating an instance with data.
+            A method for automatically populating an instance with data.
         
         Parameters
         ----------
