@@ -48,19 +48,18 @@ class VipDt:
     Parameters
     ----------
     address: str
-      A real address for a particular location
-
+        A real address for a particular location,
     credentials: dict
-      Key-value pairs for the following credentials: 
-        {
-            "fsid": "Valid Foursquare Client Id",  
-            "fssecret" : "Valid Foursquare Client Secret",  
-            "censuskey" : "Valid US Census API Key"
-        }
+        Key-value pairs for the following credentials: 
+            {"fsid": "Valid Foursquare Client Id",
+            "fssecret" : "Valid Foursquare Client Secret",
+            "censuskey" : "Valid US Census API Key"}
     """
 
     def __init__(self, address, credentials):
-        """Initializes class object parameters."""
+        """
+        Initializes class object parameters.
+        """
         self.__version__ = '1.0.1'
         self.ADDRESS = str(address)  # STRING
         self.CREDENTIALS = credentials  # DICTIONARY
@@ -125,7 +124,7 @@ class VipDt:
                     "cadetblue"]
                 }
             }
-        print("Version:", self.__version__,"... Object initialized.")
+        print("Version:", self.__version__," object initialized!")
 
             
     @staticmethod
@@ -136,7 +135,7 @@ class VipDt:
         Parameters
         ----------
         file_name: str
-         a json file name for retrieving credentials.
+            a json file name for retrieving credentials.
         """
         jsonName = file_name
         with open(jsonName,"r") as f:
@@ -156,8 +155,8 @@ class VipDt:
         Parameters
         ----------
         options: dict
-         contents include base parameters for accessing the US CENSUS BUREAU API
-         at an endpoint hard coded into the method for security purposes.
+            contents include base parameters for accessing the US CENSUS BUREAU API
+            at an endpoint hard coded into the method for security purposes.
         """
         _address = str(self.ADDRESS)
         _benchmark = str(options['benchmark'])
@@ -174,7 +173,9 @@ class VipDt:
         return {"json": json, "status": str(response.status_code)}
     
     def getTractValues(self):
-        "Returns demographic data for a given US Census tract."
+        """
+        Returns demographic data for a given US Census tract.
+        """
         json = self.LOCATION_DATA['json']
         tract_id = json['result']['addressMatches'][0]\
             ['geographies']['Census Tracts'][0]['TRACT']
@@ -277,24 +278,24 @@ class VipDt:
                   categories=['4d4b7105d754a06376d81259', 
                               '4d4b7105d754a06374d81259']):                
         """
-        Method for returning raw venue data for location 'ADDRESS'.
+        Method for returning raw venue data for 'ADDRESS'.
 
         Parameters
         ----------
         latlng: str
-         latitude,longitude as comma-separated string values
+            latitude,longitude as comma-separated string values
         query: str
-         a value to filter results
+            a value to filter results
         radius: float, int
-         a search radius in meters
+            a search radius in meters
         intent: str
-         "browse" by default. 
+            "browse" by default. 
         limit: int
-         the limit of responses, 1-50 max
+            the limit of responses, 1-50 max
         categories: str, list
-         a category id number as string value,
-         the keyword 'all' searches all keys in VENUE_CATEGORIES,
-         a list of category id numbers to search
+            a category id number as string value,
+            the keyword 'all' searches all keys in VENUE_CATEGORIES,
+            a list of category id numbers to search
 
         See Foursquare API docs for more details on query parameters.
         """
@@ -410,7 +411,7 @@ class VipDt:
         Parameters
         ----------
         save_map: bool
-         indicates whether to save a venue location map as html
+            indicates whether to save a venue location map as html
         """
         venue_data = self.FS_JSON['VENUES']
         search_address = self.LOCATION_DATA['json']['result']\
@@ -464,7 +465,7 @@ class VipDt:
         Parameters
         ----------
         venues: list
-         a list of venue id numbers to query for menu data
+            a list of venue id numbers to query for menu data
         """
         if venues is None:
             venues_dict = self.FS_JSON['VENUES']
@@ -498,11 +499,11 @@ class VipDt:
         Parameters
         ----------
         records: list
-         a list of menu query responses
+            a list of menu query responses
         drop_na: bool
-         whether to drop NoneTypes from dataframe, False by default 
+            whether to drop NoneTypes from dataframe, False by default 
         iter_limit: int
-         the number of maximum observations per dataframe
+            the number of maximum observations per dataframe
         """
         if records is None:
             records = self.FS_JSON['MENUS']
@@ -592,9 +593,9 @@ class VipDt:
         Parameters
         ----------
         menus: list
-         a list of menu query json responses
+            a list of menu query json responses
         confidence: float
-         a confidence interval between 0 and 1 for 'bayes_mvs' method.
+            a confidence interval between 0 and 1 for 'bayes_mvs' method.
         """
         menu_df = self.FS_SUMMARIES['MENUS']
         if menus is not None:
@@ -621,7 +622,7 @@ class VipDt:
         Parameters
         ----------
         pickle_name: str
-         a file name for the pickled instance
+            a file name for the pickled instance
         """
         try:
             pickle_name = self.OUTPUT_LABELS['pickleLabel']
@@ -643,7 +644,7 @@ class VipDt:
         Parameters
         ----------
         jsonName: str
-         a file name for storing json objects
+            a file name for storing json objects
         """
         jsonName = self.OUTPUT_LABELS['jsonLabel']
         data = self.FS_JSON
@@ -661,7 +662,7 @@ class VipDt:
         Parameters
         ----------
         file_name: str
-         a file name for retrieving pickled objects.
+            a file name for retrieving pickled objects.
         """
         pickleName = file_name
         try:
@@ -682,7 +683,7 @@ class VipDt:
         Parameters
         ----------
         file_name: str
-         a file name for retrieving json objects.
+            a file name for retrieving json objects.
         """
         jsonName = file_name
         with open(jsonName, "r") as f:
@@ -703,7 +704,7 @@ class VipDt:
         Parameters
         ----------
         sheets: dict
-         a dict of dataframe objects from 'FS_SUMMARIES['STATS']'.
+            a dict of dataframe objects from 'FS_SUMMARIES['STATS']'.
         """
         if sheets is None:
             sheets = self.FS_SUMMARIES['STATS']
@@ -732,14 +733,12 @@ class VipDt:
         Parameters
         ----------
         address: str
-          A real address for a particular location
+            a real address for a particular location
         credentials: dict
-          Key-value pairs for the following credentials: 
-        {
-            "fsid": "Valid Foursquare client Id",  
-            "fssecret" : "Valid Foursquare client secret",  
-            "censuskey" : "Valid US Census API Key"
-        }
+            Key-value pairs for the following credentials: 
+                {"fsid": "Valid Foursquare client Id",  
+                "fssecret" : "Valid Foursquare client secret",  
+                "censuskey" : "Valid US Census API Key"}
         """
         if address is None:
             address = input("Enter address here:") 
