@@ -307,8 +307,8 @@ class VipDt:
                 ['addressMatches'][0]['coordinates'].values())
             ll = ("{},{}").format(coords[1],coords[0])
         if categories is None:
-            ## 'Nightlife' CATEGORY ID: "4d4b7105d754a06376d81259"
-            ## 'Food' CATEGORY ID:'4d4b7105d754a06374d81259' 
+            ## 'Nightlife' CATEGORY ID  : "4d4b7105d754a06376d81259"
+            ## 'Food' CATEGORY ID       : '4d4b7105d754a06374d81259' 
             categories = ['4d4b7105d754a06376d81259', '4d4b7105d754a06374d81259']
         elif isinstance(categories,str):
             categories = [categories]
@@ -407,12 +407,12 @@ class VipDt:
 
     def getVenuesMap(self, save_map=True):
         """
-        A method for creating a Folium map from 'VENUES' json
+        A method for creating a Folium map from 'VENUES' json.
 
         Parameters
         ----------
         save_map: bool
-            Indicates whether to save a venue location map as html
+            Indicates whether to save a venue location map as html.
         """
         venue_data = self.FS_JSON['VENUES']
         search_address = self.LOCATION_DATA['json']['result']\
