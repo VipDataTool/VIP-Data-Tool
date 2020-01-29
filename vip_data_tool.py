@@ -56,6 +56,17 @@ class VipDt:
             {"fsid": "Valid Foursquare Client Id",
             "fssecret" : "Valid Foursquare Client Secret",
             "censuskey" : "Valid US Census API Key"}
+    
+    How To Use
+    ----------
+        1) import VipDt as vd       # IMPORTS CLASS MODULE
+        2) dt = vd(address, creds)  # INSTANTIATES CLASS OBJECT
+        3) dt.getVenues()           # QUERIES LOCATION FOR VENUES
+        4) dt.getMenus()            # QUERIES VENUES FOR MENUS
+        5) dt.getVenuesMap()        # CREATES VENUE LOCATION MAP
+        6) dt.setVenuesDf()         # CREATES DATAFRAME FROM VENUES
+        7) dt.setMenusDf()          # CREATES DATAFRAME FROM MENUS
+        8) dt.getMenuStats()        # CREATES STATS PKG FROM DATA
     """
 
     def __init__(self, address, credentials):
@@ -759,8 +770,24 @@ class VipDt:
             pass
 
 
-## EXAMPLES OF INTERACTING POST-QUERY DATA
-# instance.FS_SUMMARIES['MENUS'].hist(bins=100)
-# a1.FS_SUMMARIES['MENUS'].describe()
-# a2.FS_SUMMARIES['STATS']['menu_desc']
-# a3.FS_SUMMARIES['VENUES']
+"""
+## EXAMPLES OF INTERACTING WITH THIS MODULE:
+--------------------------------------------
+## IMPORT CLASS MODULE
+# import VipDt as vd
+
+## CREATE CLASS OBJECT
+# dt = vd(address, credentials)
+
+## QUERY LOCATION FOR VENUES
+# dt.getVenues()
+
+## QUERY VENUES FOR MENUS
+# dt.getMenus()
+
+## EXAMINE QUERY RESULTS
+# dt.getVenuesMap()
+# dt.setVenuesDf()
+# dt.setMenusDf()
+# dt.getMenuStats()
+"""
