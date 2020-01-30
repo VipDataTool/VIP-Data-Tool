@@ -27,12 +27,12 @@ import traceback
 import censusdata
 import pickle
 import json
-from pathlib import Path
 import pandas as pd 
 import scipy.stats
 import requests
 import folium
 import numpy as np
+from pathlib import Path
 
 pd.set_option('display.precision', 2)
 pd.set_option('display.max_rows', 1000)
