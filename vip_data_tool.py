@@ -354,7 +354,7 @@ class VipDt:
             responses[category] = client.venues.search(params)
         self.FS_JSON['VENUES'] = responses
         print("Venue query operation complete!")
-        return responses
+        return #responses
 
     def setVenuesDf(self):
         """
@@ -520,7 +520,7 @@ class VipDt:
             traceback.print_exc()
         self.FS_JSON['MENUS'] = menus
         print("Menu query operation complete!")
-        return menus
+        return #menus
 
     def setMenusDf(self, records=None, drop_na=False, iter_limit=None, drop_menus_with=[]):
         """
