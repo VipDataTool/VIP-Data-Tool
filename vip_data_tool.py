@@ -33,7 +33,6 @@ import requests
 import folium
 import numpy as np
 from pathlib import Path
-
 pd.set_option('display.precision', 2)
 pd.set_option('display.max_rows', 1000)
 pd.set_option('display.max_columns', 50)
@@ -675,7 +674,10 @@ class VipDt:
         A file name for storing json objects.
         """
         jsonName = self.OUTPUT_LABELS['jsonLabel']
-        data = self.FS_JSON
+        data = {
+            'FS_JSON': self.FS_JSON, 
+            'LOCATION': self.LOCATION_DATA['json']
+            }
         with open(jsonName, "w") as f:
             json.dump(data, f)
             f.close()
@@ -699,11 +701,15 @@ class VipDt:
             f.close()
             print(jsonName, "found!")
         value = json.load(data)
-        # location=
+        location = pd.read_json(value['LOCATION'])
         venues = pd.read_json(value["VENUES"])
         menus = pd.read_json(value["MENUS"])
-        payload = {"VENUES": venues, "MENUS": menus}
-        self.FS_JSON=payload
+        payload = {
+            'LOCATION': location,
+            'FS_JSON': {"VENUES": venues, "MENUS": menus}
+            }
+        self.LOCATION_DATA
+        self.FS_JSON=payload['FS_JSON']
         return payload
 
     def stats2Excel(self, sheets=None):
