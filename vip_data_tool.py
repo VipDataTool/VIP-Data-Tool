@@ -142,7 +142,7 @@ class VipDt:
                     "cadetblue"]
                 }
             }
-        print("Version:", self.__version__," object initialized!")
+        print("Version:", self.__version__,"object initialized!")
 
             
     @staticmethod
