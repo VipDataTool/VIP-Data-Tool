@@ -44,36 +44,39 @@ class VipDt:
     """
     Description
     -----------
-        A collection of methods for returning venue data for 
-        a given US address from the Foursquare Places API.
+    A collection of methods for returning venue data for 
+    a given US address from the Foursquare Places API.
 
     Parameters
     ----------
-    address: str
-        A real address for a given location.
-    credentials: dict
-        Key-value pairs for the following credentials: 
-            {"fsid": "Valid Foursquare Client Id",
-            "fssecret" : "Valid Foursquare Client Secret",
-            "censuskey" : "Valid US Census API Key"}
+    address: str  
+    A real address for a given location.  
+
+    credentials: dict  
+    Key-value pairs for the following credentials: 
+        {"fsid": "Valid Foursquare Client Id",
+        "fssecret" : "Valid Foursquare Client Secret",
+        "censuskey" : "Valid US Census API Key"}
     
     How To Use
     ----------
-        1) import VipDt as vd       # IMPORTS CLASS MODULE
-        2) dt = vd(address, creds)  # INSTANTIATES CLASS OBJECT
-        3) dt.getVenues()           # QUERIES LOCATION FOR VENUES
-        4) dt.getMenus()            # QUERIES VENUES FOR MENUS
-        5) dt.getVenuesMap()        # CREATES VENUE LOCATION MAP
-        6) dt.setVenuesDf()         # CREATES DATAFRAME FROM VENUES
-        7) dt.setMenusDf()          # CREATES DATAFRAME FROM MENUS
-        8) dt.getMenuStats()        # CREATES STATS PKG FROM DATA
+        1) import VipDt as vd       # IMPORT CLASS MODULE
+        2) dt = vd(address, creds)  # INSTANTIATE CLASS OBJECT
+        3) dt.getVenues()           # QUERY LOCATION FOR VENUES
+        4) dt.getMenus()            # QUERY VENUES FOR MENUS
+        5) dt.setJson()             # STORE QUERY DATA IN LOCAL JSON FILE
+        5) dt.getVenuesMap()        # CREATE VENUE LOCATION MAP
+        6) dt.setVenuesDf()         # CREATE DATAFRAME FROM VENUES
+        7) dt.setMenusDf()          # CREATE DATAFRAME FROM MENUS
+        8) dt.getMenuStats()        # CREATE STATS PKG FROM DATA
+        9) dt.start()               # PERFORMS ABOVE METHODS IN SEQUENCE AND
     """
 
     def __init__(self, address, credentials):
         """
         Description
         -----------
-            Initializes class object parameters.
+        Initializes class object parameters.
         """
         self.__version__ = '1.0.1'
         self.ADDRESS = str(address)  # STRING
@@ -161,10 +164,7 @@ class VipDt:
             print(jsonName, "found!")
         return data
 
-    def getCensusGeo(self, options={
-                            'benchmark':"Public_AR_Census2010",
-                            'vintage':"Census2010_Census2010",
-                            'layers':"08"}):
+    def getCensusGeo(self, options=None ):
         """
         Description
         -----------
@@ -177,6 +177,12 @@ class VipDt:
         'layers' for accessing the US CENSUS BUREAU API at an endpoint 
         hard coded into the method for security purposes.
         """
+        if options is None:
+            options={
+                'benchmark':"Public_AR_Census2010",
+                'vintage':"Census2010_Census2010",
+                'layers':"08"
+                }
         _address = str(self.ADDRESS)
         _benchmark = str(options['benchmark'])
         _vintage = str(options['vintage'])
@@ -780,23 +786,23 @@ class VipDt:
 
 
 """
-## EXAMPLES OF INTERACTING WITH THIS MODULE:
+EXAMPLES OF INTERACTING WITH THIS MODULE:
 --------------------------------------------
 ## IMPORT CLASS MODULE
-# import VipDt as vd
+import VipDt as vd
 
 ## CREATE CLASS OBJECT
-# dt = vd(address, credentials)
+dt = vd(address, credentials)
 
 ## QUERY LOCATION FOR VENUES
-# dt.getVenues()
+dt.getVenues()
 
 ## QUERY VENUES FOR MENUS
-# dt.getMenus()
+dt.getMenus()
 
 ## EXAMINE QUERY RESULTS
-# dt.getVenuesMap()
-# dt.setVenuesDf()
-# dt.setMenusDf()
-# dt.getMenuStats()
+dt.getVenuesMap()
+dt.setVenuesDf()
+dt.setMenusDf()
+dt.getMenuStats()
 """
