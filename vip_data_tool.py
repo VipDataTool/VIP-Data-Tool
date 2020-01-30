@@ -80,11 +80,20 @@ class VipDt:
         self.__version__ = '1.0.1'
         self.ADDRESS = str(address)  # STRING
         self.CREDENTIALS = credentials  # DICTIONARY
-        self.LOCATION_DATA = VipDt.getCensusGeo(self)  # DICTIONARY
-        self.TRACT_DATA = VipDt.getTractValues(self)  # DICTIONARY
-        self.FS_JSON = {'VENUES':None, 'MENUS':None}
-        self.FS_SUMMARIES = {
-            'VENUES':None, 'MENUS':None, 'STATS':None, 'MAP':None
+        # self.LOCATION_DATA = VipDt.getCensusGeo(self)  # DICTIONARY
+        # self.TRACT_DATA = VipDt.getTractValues(self)  # DICTIONARY
+        # self.FS_JSON = {'VENUES':None, 'MENUS':None}
+        self.JSON_DATA = {
+            'LOCATION': VipDt.getCensusGeo(self),
+            'VENUES': None, 
+            'MENUS': None
+            }
+        self.QUERY_SUMMARIES = {
+            'TRACT': VipDt.getTractValues(self), 
+            'VENUES':None, 
+            'MENUS':None, 
+            'STATS':None, 
+            'MAP':None
             }
         self.OUTPUT_LABELS = {
             'pickleLabel' : ("{}.pickle").format(self.ADDRESS),
@@ -141,6 +150,7 @@ class VipDt:
                     "cadetblue"]
                 }
             }
+        # self.JSON_DATA['']
         print("Version:", self.__version__,"object initialized!")
 
             
@@ -202,7 +212,7 @@ class VipDt:
         -----------
         Returns demographic data for a given US Census tract.
         """
-        json = self.LOCATION_DATA['json']
+        json = self.JSON_DATA['LOCATION']['json']
         tract_id = json['result']['addressMatches'][0]\
             ['geographies']['Census Tracts'][0]['TRACT']
         county_id = json['result']['addressMatches'][0]\
@@ -332,11 +342,12 @@ class VipDt:
         See the Foursquare API docs for more details on query parameters.
         """
         if radius is None:
-            radius = self.TRACT_DATA['RADIUS']
+            # radius = self.TRACT_DATA['RADIUS']
+            radius = self.QUERY_SUMMARIES['TRACT']['RADIUS']
         if isinstance(latlng,str):
             ll = latlng
         else:
-            coords = tuple(self.LOCATION_DATA['json']['result']\
+            coords = tuple(self.JSON_DATA['LOCATION']['json']['result']\
                 ['addressMatches'][0]['coordinates'].values())
             ll = ("{},{}").format(coords[1],coords[0])
         if categories is None:
@@ -363,7 +374,7 @@ class VipDt:
                 'limit': limit
             }
             responses[category] = client.venues.search(params)
-        self.FS_JSON['VENUES'] = responses
+        self.JSON_DATA['VENUES'] = responses
         print("Venue query operation complete!")
         return #responses
 
@@ -373,7 +384,7 @@ class VipDt:
         -----------
         A method for extracting a dataframe of from 'VENUES' json.
         """
-        json = self.FS_JSON['VENUES']
+        json = self.JSON_DATA['VENUES']
         venue_list = []
         for category in json:
             category_idn = category
@@ -437,7 +448,7 @@ class VipDt:
             columns=['venue_name',"venue_id",'category_idn', 'venue_address', \
                 'venue_lat', 'venue_lng', "venue_referral_id", "delivery_provider", 
                 "delivery_url"])
-        self.FS_SUMMARIES['VENUES'] = df
+        self.QUERY_SUMMARIES['VENUES'] = df
         return df
 
     def getVenuesMap(self, save_map=True):
@@ -451,12 +462,12 @@ class VipDt:
         save_map: bool;  
         Indicates whether to output the venue location map as an html.
         """
-        venue_data = self.FS_JSON['VENUES']
-        search_address = self.LOCATION_DATA['json']['result']\
+        venue_data = self.JSON_DATA['VENUES']
+        search_address = self.JSON_DATA['LOCATION']['json']['result']\
             ['addressMatches'][0]['matchedAddress']
-        search_lat = self.LOCATION_DATA['json']['result']\
+        search_lat = self.JSON_DATA['LOCATION']['json']['result']\
             ['addressMatches'][0]['coordinates']['y']
-        search_lng = self.LOCATION_DATA['json']['result']\
+        search_lng = self.JSON_DATA['LOCATION']['json']['result']\
             ['addressMatches'][0]['coordinates']['x']
         search_coords = (search_lat,search_lng)
         m = folium.Map(
@@ -491,7 +502,7 @@ class VipDt:
                         icon= venue_icon,
                         color= venue_icon_color)
                     ).add_to(m)
-        self.FS_SUMMARIES['MAP'] = m
+        self.QUERY_SUMMARIES['MAP'] = m
         if save_map == True:
             m.save(self.OUTPUT_LABELS['foliumLabel'])
         return m
@@ -508,7 +519,7 @@ class VipDt:
         A list of venue id numbers to query for menu data.
         """
         if venues is None:
-            venues_dict = self.FS_JSON['VENUES']
+            venues_dict = self.JSON_DATA['VENUES']
         client = foursquare.Foursquare(
             client_id = self.CREDENTIALS['fsid'], 
             client_secret = self.CREDENTIALS['fssecret'])
@@ -528,7 +539,7 @@ class VipDt:
                         menus[venue_name] = response
         except:
             traceback.print_exc()
-        self.FS_JSON['MENUS'] = menus
+        self.JSON_DATA['MENUS'] = menus
         print("Menu query operation complete!")
         return #menus
 
@@ -550,7 +561,7 @@ class VipDt:
         Maximum number of observations per dataframe. 'None' by default.
         """
         if records is None:
-            records = self.FS_JSON['MENUS']
+            records = self.JSON_DATA['MENUS']
         bulk_items = []
         for key in records:
             if records[key]['menu']['menus']['count'] > 0:
@@ -623,7 +634,7 @@ class VipDt:
                         else:
                             pass
                 df.drop(filter_index_list, inplace=True)
-            self.FS_SUMMARIES['MENUS'] = df
+            self.QUERY_SUMMARIES['MENUS'] = df
             return df
         except TypeError:
             traceback.print_exc
@@ -644,7 +655,7 @@ class VipDt:
         confidence: float;  
         A confidence interval between 0 and 1 for 'bayes_mvs' method.
         """
-        menu_df = self.FS_SUMMARIES['MENUS']
+        menu_df = self.QUERY_SUMMARIES['MENUS']
         if menus is not None:
             menu_df = menus
         menu_data = menu_df[['venue_name', 'menu_name', 'section_name', \
@@ -659,7 +670,7 @@ class VipDt:
         bayes_stats = scipy.stats.bayes_mvs(items, alpha=confidence)
         menuStats = {"menu_items": menu_data, "menu_desc": menu_desc, 
                     "explore_menus": explore_menus, "bayes_mvs": bayes_stats}
-        self.FS_SUMMARIES['STATS'] = menuStats
+        self.QUERY_SUMMARIES['STATS'] = menuStats
         return menuStats
 
     def setJson(self):
@@ -675,8 +686,9 @@ class VipDt:
         """
         jsonName = self.OUTPUT_LABELS['jsonLabel']
         data = {
-            'FS_JSON': self.FS_JSON, 
-            'LOCATION': self.LOCATION_DATA['json']
+            'MENUS': self.JSON_DATA['MENUS'],
+            'VENUES': self.JSON_DATA['VENUES'], 
+            'LOCATION': self.JSON_DATA['LOCATION']#['json']
             }
         with open(jsonName, "w") as f:
             json.dump(data, f)
@@ -706,10 +718,10 @@ class VipDt:
         menus = pd.read_json(value["MENUS"])
         payload = {
             'LOCATION': location,
-            'FS_JSON': {"VENUES": venues, "MENUS": menus}
-            }
-        self.LOCATION_DATA
-        self.FS_JSON=payload['FS_JSON']
+            'MENUS': menus,
+            'VENUES': venues
+        }
+        self.JSON_DATA = payload
         return payload
 
     def stats2Excel(self, sheets=None):
@@ -724,7 +736,7 @@ class VipDt:
         A dict of dataframe objects from 'FS_SUMMARIES['STATS']'.
         """
         if sheets is None:
-            sheets = self.FS_SUMMARIES['STATS']
+            sheets = self.QUERY_SUMMARIES['STATS']
         sheet_file_name = self.OUTPUT_LABELS['xlLabel']
         with pd.ExcelWriter(sheet_file_name) as writer:
             for item in sheets:
