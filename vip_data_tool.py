@@ -48,10 +48,10 @@ class VipDt:
 
     Parameters
     ----------
-    address: str  
+    address: str;  
     A real address for a given location.  
 
-    credentials: dict  
+    credentials: dict;  
     Key-value pairs for the following credentials: 
         {"fsid": "Valid Foursquare Client Id",
         "fssecret" : "Valid Foursquare Client Secret",
@@ -80,9 +80,6 @@ class VipDt:
         self.__version__ = '1.0.1'
         self.ADDRESS = str(address)  # STRING
         self.CREDENTIALS = credentials  # DICTIONARY
-        # self.LOCATION_DATA = VipDt.getCensusGeo(self)  # DICTIONARY
-        # self.TRACT_DATA = VipDt.getTractValues(self)  # DICTIONARY
-        # self.FS_JSON = {'VENUES':None, 'MENUS':None}
         self.JSON_DATA = {
             'LOCATION': VipDt.getCensusGeo(self),
             'VENUES': None, 
