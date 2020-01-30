@@ -147,12 +147,12 @@ class VipDt:
         """
         Description
         -----------
-            A method for reconstituting previously serialized JSON data.
+        A method for reconstituting previously serialized JSON data.
 
         Parameters
         ----------
-        file_name: str
-            A json file name for retrieving credentials.
+        file_name: str;  
+        A json file name for retrieving credentials.
         """
         jsonName = file_name
         with open(jsonName,"r") as f:
@@ -168,13 +168,14 @@ class VipDt:
         """
         Description
         -----------
-            Returns geo data from the US Census Bureau for a given address.
+        Returns geo data from the US Census Bureau for a given address.
 
         Parameters
         ----------
-        options: dict
-            Contents include base parameters for accessing the US CENSUS BUREAU API
-            at an endpoint hard coded into the method for security purposes.
+        options: dict;  
+        Contents include key-value pairs for 'benchmark', 'vintage' and 
+        'layers' for accessing the US CENSUS BUREAU API at an endpoint 
+        hard coded into the method for security purposes.
         """
         _address = str(self.ADDRESS)
         _benchmark = str(options['benchmark'])
@@ -194,7 +195,7 @@ class VipDt:
         """
         Description
         -----------
-            Returns demographic data for a given US Census tract.
+        Returns demographic data for a given US Census tract.
         """
         json = self.LOCATION_DATA['json']
         tract_id = json['result']['addressMatches'][0]\
@@ -299,26 +300,31 @@ class VipDt:
         """
         Description
         -----------
-            Method for returning raw venue data for 'ADDRESS'.
+        Method for returning raw venue data for 'ADDRESS'.
 
         Parameters
         ----------
-        latlng: str
-            Latitude, longitude as a comma-separated string values.
-        query: str
-            A value to filter results.
-        radius: float, int
-            A search radius in meters.
-        intent: str
-            Set to "browse" by default. 
-        limit: int
-            The max limit of responses, 1-50 max.
-        categories: str, list
-            Accepts a 'category id' as a string value,
-            or 'all' to search each key in VENUE_CATEGORIES,
-            or a list of specific 'category id' numbers to search.
+        latlng: str;  
+        Latitude, longitude as a comma-separated string values.  
 
-        See Foursquare API docs for more details on query parameters.
+        query: str;  
+        A value to filter results.  
+
+        radius: float, int;  
+        A search radius in meters.  
+
+        intent: str;  
+        Set to "browse" by default.  
+
+        limit: int;  
+        The max limit of responses, 1-50 max.  
+
+        categories: str, list;  
+        Accepts a 'category id' as a string value,
+        or 'all' to search each key in VENUE_CATEGORIES,
+        or a list of specific 'category id' numbers to search.  
+
+        See the Foursquare API docs for more details on query parameters.
         """
         if radius is None:
             radius = self.TRACT_DATA['RADIUS']
@@ -360,7 +366,7 @@ class VipDt:
         """
         Description
         -----------
-            A method for extracting a dataframe of from 'VENUES' json.
+        A method for extracting a dataframe of from 'VENUES' json.
         """
         json = self.FS_JSON['VENUES']
         venue_list = []
@@ -433,12 +439,12 @@ class VipDt:
         """
         Description
         -----------
-            A method for creating a Folium map from 'VENUES' json.
+        A method for creating a Folium map from 'VENUES' json.
 
         Parameters
         ----------
-        save_map: bool
-            Indicates whether to output the venue location map as an html.
+        save_map: bool;  
+        Indicates whether to output the venue location map as an html.
         """
         venue_data = self.FS_JSON['VENUES']
         search_address = self.LOCATION_DATA['json']['result']\
@@ -489,12 +495,12 @@ class VipDt:
         """
         Description
         -----------
-            A method for returning venue menu query response data.
+        A method for returning venue menu query response data.
 
         Parameters
         ----------
-        venues: list
-            A list of venue id numbers to query for menu data.
+        venues: list;  
+        A list of venue id numbers to query for menu data.
         """
         if venues is None:
             venues_dict = self.FS_JSON['VENUES']
@@ -525,16 +531,18 @@ class VipDt:
         """
         Description
         -----------
-            A method for extracting a dataframe from 'MENUS' json.
+        A method for extracting a dataframe from 'MENUS' json.
 
         Parameters
         ----------
-        records: list
-            A list of menu query responses.
-        drop_na: bool
-            Drops 'NoneTypes' from dataframe. 'False' by default.   
-        iter_limit: int
-            Maximum number of observations per dataframe. 'None' by default.
+        records: list;  
+        A list of menu query responses.  
+
+        drop_na: bool;  
+        Drops 'NoneTypes' from dataframe. 'False' by default.  
+
+        iter_limit: int;  
+        Maximum number of observations per dataframe. 'None' by default.
         """
         if records is None:
             records = self.FS_JSON['MENUS']
@@ -621,14 +629,15 @@ class VipDt:
         """
         Description
         -----------
-            Returns a dictionary of dataframes with descriptive 'price' analyses.
+        Returns a dictionary of dataframes with descriptive 'price' analyses.
 
         Parameters
         ----------
-        menus: list
-            A list of menu query json responses.
-        confidence: float
-            A confidence interval between 0 and 1 for 'bayes_mvs' method.
+        menus: list;  
+        A list of menu query json responses.
+
+        confidence: float;  
+        A confidence interval between 0 and 1 for 'bayes_mvs' method.
         """
         menu_df = self.FS_SUMMARIES['MENUS']
         if menus is not None:
@@ -652,12 +661,12 @@ class VipDt:
         """
         Description
         -----------
-            A method for serializing data from the current instance.
+        A method for serializing data from the current instance.
         
         Parameters
         ----------
-        jsonName: str
-            A file name for storing json objects.
+        jsonName: str;  
+        A file name for storing json objects.
         """
         jsonName = self.OUTPUT_LABELS['jsonLabel']
         data = self.FS_JSON
@@ -671,12 +680,12 @@ class VipDt:
         """
         Description
         -----------
-            A method for reconstituting previously serialized JSON data.
+        A method for reconstituting previously serialized JSON data.
 
         Parameters
         ----------
-        file_name: str
-            A file name for retrieving json objects.
+        file_name: str;  
+        A file name for retrieving json objects.
         """
         jsonName = file_name
         with open(jsonName, "r") as f:
@@ -695,12 +704,12 @@ class VipDt:
         """
         Description
         -----------
-            A method for exporting instance data as a spreadsheet.
+        A method for exporting instance data as a spreadsheet.
         
         Parameters
         ----------
-        sheets: dict
-            A dict of dataframe objects from 'FS_SUMMARIES['STATS']'.
+        sheets: dict;  
+        A dict of dataframe objects from 'FS_SUMMARIES['STATS']'.
         """
         if sheets is None:
             sheets = self.FS_SUMMARIES['STATS']
@@ -726,17 +735,18 @@ class VipDt:
         """
         Description
         -----------
-            A method for automatically populating an instance with data.
-        
+        A method for automatically populating an instance with data.
+
         Parameters
         ----------
-        address: str
-            A real address for a particular location.
-        credentials: dict
-            Key-value pairs for the following credentials: 
-                {"fsid": "Valid Foursquare client Id",  
-                "fssecret" : "Valid Foursquare client secret",  
-                "censuskey" : "Valid US Census API Key"}
+        address: str;  
+        An address for a chosen location.
+
+        credentials: dict;  
+        Key-value pairs for the following credentials: 
+            {"fsid": "Valid Foursquare client Id",  
+            "fssecret" : "Valid Foursquare client secret",  
+            "censuskey" : "Valid US Census API Key"}
         """
         if address is None:
             address = input("Enter address here:") 
