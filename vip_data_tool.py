@@ -162,7 +162,7 @@ class VipDt:
         try:
             self.JSON_DATA['LOCATION'] = VipDt.getCensusGeo(self)
         except:
-            print("Error with 'getCensusGeo'! 'getGeopyGeo' method selected.")
+            print("Error with 'getCensusGeo()'! 'getGeopyGeo()' method selected.")
             self.JSON_DATA['LOCATION'] = VipDt.getGeopyGeo(self)
         try:
             self.QUERY_SUMMARIES['TRACT'] = VipDt.getTractValues(self)
@@ -379,7 +379,6 @@ class VipDt:
             radius = self.QUERY_SUMMARIES['TRACT']['RADIUS']
         if isinstance(latlng,str):
             ll = latlng
-        ## Below here is where to exception handle for geopy 'location.raw'.
         else:
             try:
                 ## fetches coords from censusgeo results
