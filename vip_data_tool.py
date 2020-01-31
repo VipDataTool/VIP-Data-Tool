@@ -60,16 +60,16 @@ class VipDt:
     
     How To Use
     ----------
-        1) import VipDt as vd       # IMPORT CLASS MODULE
-        2) dt = vd(address, creds)  # INSTANTIATE CLASS OBJECT
-        3) dt.getVenues()           # QUERY LOCATION FOR VENUES
-        4) dt.getMenus()            # QUERY VENUES FOR MENUS
-        5) dt.setJson()             # STORE QUERY DATA IN LOCAL JSON FILE
-        5) dt.getVenuesMap()        # CREATE VENUE LOCATION MAP
-        6) dt.setVenuesDf()         # CREATE DATAFRAME FROM VENUES
-        7) dt.setMenusDf()          # CREATE DATAFRAME FROM MENUS
-        8) dt.getMenuStats()        # CREATE STATS PKG FROM DATA
-        9) dt.start()               # PERFORMS ABOVE METHODS IN SEQUENCE AND
+        1) import VipDt as vd           # IMPORT CLASS MODULE
+        2) dt=vd(address,credentials)   # INSTANTIATE CLASS OBJECT
+        3) dt.getVenues()               # QUERY LOCATION FOR VENUES
+        4) dt.getMenus()                # QUERY VENUES FOR MENUS
+        5) dt.setJson()                 # STORE QUERY DATA IN LOCAL JSON FILE
+        5) dt.getVenuesMap()            # CREATE VENUE LOCATION MAP
+        6) dt.setVenuesDf()             # CREATE DATAFRAME FROM VENUES
+        7) dt.setMenusDf()              # CREATE DATAFRAME FROM MENUS
+        8) dt.getMenuStats()            # CREATE STATS PKG FROM DATA
+        9) dt.start()                   # PERFORMS ABOVE METHODS IN SEQUENCE AND
     """
 
     def __init__(self, address, credentials):
@@ -198,7 +198,7 @@ class VipDt:
         location = geolocator.geocode(address, addressdetails=True)
         return {"json": location.raw}
 
-    def getCensusGeo(self, options=None ):
+    def getCensusGeo(self, options=None):
         """
         Description
         -----------
@@ -223,15 +223,16 @@ class VipDt:
         _layers = str(options['layers'])
         _format = "json"
         _key = self.CREDENTIALS['censuskey']
-        base_url = "https://geocoding.geo.census.gov/\
-            geocoder/geographies/onelineaddress?"
-        params = ("address={}&benchmark={}&vintage={}\
-            &layers={}&format={}&key={}").format(
-                _address,_benchmark,_vintage,_layers,_format,_key
-                )
+        base_url = "https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress?"
+        params = ("address={}&benchmark={}&vintage={}&layers={}&format={}&key={}").format(
+                _address,_benchmark,_vintage,_layers,_format,_key)
         api_url = ("{}{}").format(base_url, params)
         response = requests.get(api_url)
-        json = response.json()
+        # print(response.status_code)
+        if response.status_code==200:
+            json = response.json()
+        else:
+            json = {}
         return {"json": json, "status": str(response.status_code)}
     
     def getTractValues(self):
