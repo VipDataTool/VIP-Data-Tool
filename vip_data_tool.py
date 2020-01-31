@@ -69,7 +69,7 @@ class VipDt:
         6) dt.setVenuesDf()             # CREATE DATAFRAME FROM VENUES
         7) dt.setMenusDf()              # CREATE DATAFRAME FROM MENUS
         8) dt.getMenuStats()            # CREATE STATS PKG FROM DATA
-        9) dt.start()                   # PERFORMS ABOVE METHODS IN SEQUENCE AND
+        9) dt.start()                   # PERFORMS ABOVE METHODS SEQUENTIALLY
     """
 
     def __init__(self, address, credentials):
