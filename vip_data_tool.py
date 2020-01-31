@@ -82,10 +82,16 @@ class VipDt:
         self.ADDRESS = str(address)  # STRING
         self.CREDENTIALS = credentials  # DICTIONARY
         self.JSON_DATA = {
-            'LOCATION': None,'VENUES': None, 'MENUS': None}
+            'LOCATION': None,
+            'VENUES': None, 
+            'MENUS': None
+            }
         self.QUERY_SUMMARIES = {
-            'TRACT': {}, 'VENUES':None, 'MENUS':None, 
-            'STATS':None, 'MAP':None
+            'TRACT': {}, 
+            'VENUES':None, 
+            'MENUS':None, 
+            'STATS':None, 
+            'MAP':None
             }
         self.OUTPUT_LABELS = {
             'pickleLabel' : ("{}.pickle").format(self.ADDRESS),
@@ -98,48 +104,59 @@ class VipDt:
                 'lightred', 'lightblue', 'lightgreen', 'cadetblue', 
                 'red', 'blue', 'green', 'orange', 'purple', 'pink', 
                 'darkred', 'darkblue', 'darkgreen', 'darkpurple', 
-                'gray', 'lightgray', 'black', 'white', 'beige'],
+                'gray', 'lightgray', 'black', 'white', 'beige'
+                ],
             "CATEGORIES":{
                 "4d4b7104d754a06370d81259": [
                     "Arts & Entertainment", 
                     "glyphicon glyphicon-music",
-                    "darkblue"],
+                    "darkblue"
+                    ],
                 "4d4b7105d754a06372d81259": [
                     "College & University", 
                     "glyphicon glyphicon-pencil",
-                    "orange"],
+                    "orange"
+                    ],
                 "4d4b7105d754a06373d81259": [
                     "Event", 
                     "glyphicon glyphicon-calendar",
-                    "purple"],
+                    "purple"
+                    ],
                 "4d4b7105d754a06374d81259": [
                     "Food", 
                     "glyphicon glyphicon-cutlery",
-                    "red"],
+                    "red"
+                    ],
                 "4d4b7105d754a06376d81259": [
                     "Nightlife Spot", 
                     "glyphicon glyphicon-glass",
-                    "blue"],
+                    "blue"
+                    ],
                 "4d4b7105d754a06377d81259": [
                     "Outdoors & Recreation", 
                     "glyphicon glyphicon-tree-conifer",
-                    "green"],
+                    "green"
+                    ],
                 "4d4b7105d754a06375d81259": [
                     "Professional & Other Places", 
                     "glyphicon glyphicon-envelope",
-                    "lightgray"],
+                    "lightgray"
+                    ],
                 "4e67e38e036454776db1fb3a": [
                     "Residence", 
                     "glyphicon glyphicon-home",
-                    "gray"],
+                    "gray"
+                    ],
                 "4d4b7105d754a06378d81259": [
                     "Shop & Service", 
                     "glyphicon glyphicon-shopping-cart",
-                    "pink"],
+                    "pink"
+                    ],
                 "4d4b7105d754a06379d81259": [
                     "Travel & Transport", 
                     "glyphicon glyphicon-plane",
-                    "cadetblue"]
+                    "cadetblue"
+                    ]
                 }
             }
         try:
@@ -152,7 +169,6 @@ class VipDt:
         except:
             print("Error! 'getTractValues' method failed!")
             pass
-            
         print("Version:", self.__version__,"object initialized!")
 
             
@@ -207,9 +223,12 @@ class VipDt:
         _layers = str(options['layers'])
         _format = "json"
         _key = self.CREDENTIALS['censuskey']
-        base_url = "https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress?"
-        params = ("address={}&benchmark={}&vintage={}&layers={}&format={}&key={}").format(
-            _address,_benchmark,_vintage,_layers,_format,_key)
+        base_url = "https://geocoding.geo.census.gov/\
+            geocoder/geographies/onelineaddress?"
+        params = ("address={}&benchmark={}&vintage={}\
+            &layers={}&format={}&key={}").format(
+                _address,_benchmark,_vintage,_layers,_format,_key
+                )
         api_url = ("{}{}").format(base_url, params)
         response = requests.get(api_url)
         json = response.json()
