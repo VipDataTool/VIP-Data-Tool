@@ -33,6 +33,7 @@ import requests
 import folium
 import numpy as np
 from pathlib import Path
+from geopy import Nominatim
 pd.set_option('display.precision', 2)
 pd.set_option('display.max_rows', 1000)
 pd.set_option('display.max_columns', 50)
@@ -52,10 +53,10 @@ class VipDt:
     A real address for a given location.  
 
     credentials: dict;  
-    Key-value pairs for the following credentials: 
-        {"fsid": "Valid Foursquare Client Id",
+    Key-value pairs include the following credentials: 
+        "fsid": "Valid Foursquare Client Id",
         "fssecret" : "Valid Foursquare Client Secret",
-        "censuskey" : "Valid US Census API Key"}
+        "censuskey" : "Valid US Census API Key"
     
     How To Use
     ----------
@@ -81,16 +82,10 @@ class VipDt:
         self.ADDRESS = str(address)  # STRING
         self.CREDENTIALS = credentials  # DICTIONARY
         self.JSON_DATA = {
-            'LOCATION': VipDt.getCensusGeo(self),
-            'VENUES': None, 
-            'MENUS': None
-            }
+            'LOCATION': None,'VENUES': None, 'MENUS': None}
         self.QUERY_SUMMARIES = {
-            'TRACT': VipDt.getTractValues(self), 
-            'VENUES':None, 
-            'MENUS':None, 
-            'STATS':None, 
-            'MAP':None
+            'TRACT': {}, 'VENUES':None, 'MENUS':None, 
+            'STATS':None, 'MAP':None
             }
         self.OUTPUT_LABELS = {
             'pickleLabel' : ("{}.pickle").format(self.ADDRESS),
@@ -147,7 +142,17 @@ class VipDt:
                     "cadetblue"]
                 }
             }
-        # self.JSON_DATA['']
+        try:
+            self.JSON_DATA['LOCATION'] = VipDt.getCensusGeo(self)
+        except:
+            print("Error with 'getCensusGeo'! 'getGeopyGeo' method selected.")
+            self.JSON_DATA['LOCATION'] = VipDt.getGeopyGeo(self)
+        try:
+            self.QUERY_SUMMARIES['TRACT'] = VipDt.getTractValues(self)
+        except:
+            print("Error! 'getTractValues' method failed!")
+            pass
+            
         print("Version:", self.__version__,"object initialized!")
 
             
@@ -169,6 +174,13 @@ class VipDt:
             f.close()
             print(jsonName, "found!")
         return data
+
+    def getGeopyGeo(self, agent="foursquare app"):
+        """Returns a dict of geolocation data for the 'target address'."""
+        geolocator = Nominatim(user_agent=agent)
+        address = str(self.ADDRESS)
+        location = geolocator.geocode(address, addressdetails=True)
+        return {"json": location.raw}
 
     def getCensusGeo(self, options=None ):
         """
@@ -209,102 +221,108 @@ class VipDt:
         -----------
         Returns demographic data for a given US Census tract.
         """
-        json = self.JSON_DATA['LOCATION']['json']
-        tract_id = json['result']['addressMatches'][0]\
-            ['geographies']['Census Tracts'][0]['TRACT']
-        county_id = json['result']['addressMatches'][0]\
-            ['geographies']['Census Tracts'][0]['COUNTY']
-        state_id = json['result']['addressMatches'][0]\
-            ['geographies']['Census Tracts'][0]['STATE']
-        land_area = json['result']['addressMatches'][0]\
-            ['geographies']['Census Tracts'][0]['AREALAND']
-        population = json['result']['addressMatches'][0]\
-            ['geographies']['Census Tracts'][0]['POP100']
-        census_vals = {
-            "tract_id": tract_id, "county_id": county_id, 
-            "state_id": state_id, "land_area": land_area, 
-            "tract_pop": population
-            }
-        print("Census data found...")
-        api_key = self.CREDENTIALS['censuskey']
-        area= float(census_vals['land_area'])
-        geo = censusdata.censusgeo(
-            [('state', str(census_vals['state_id'])),
-             ('county', str(census_vals['county_id'])),
-             ('tract', str(census_vals['tract_id']))]
-        )
-        ## ATTN! BELOW ARE CENSUS TABLE CODES WITH CORRESPONDING TITLES.
-        data = censusdata.download(
-            'acs5', 2015, geo,
-                [
-                    'B19001_001E',  # Total!!Respondents
-                    'B19001_002E',  # Total!!Less than $10,000
-                    'B19001_003E',  # Total!!$10,000 to $14,999
-                    'B19001_004E',  # Total!!$15,000 to $19,999
-                    'B19001_005E',  # Total!!$20,000 to $24,999
-                    'B19001_006E',  # Total!!$25,000 to $29,999
-                    'B19001_007E',  # Total!!$30,000 to $34,999
-                    'B19001_008E',  # Total!!$35,000 to $39,999
-                    'B19001_009E',  # Total!!$40,000 to $44,999
-                    'B19001_010E',  # Total!!$45,000 to $49,999
-                    'B19001_011E',  # Total!!$50,000 to $59,999
-                    'B19001_012E',  # Total!!$60,000 to $74,999
-                    'B19001_013E',  # Total!!$75,000 to $99,999
-                    'B19001_014E',  # Total!!$100,000 to $124,999
-                    'B19001_015E',  # Total!!$125,000 to $149,999
-                    'B19001_016E',  # Total!!$150,000 to $199,999
-                    'B19001_017E'   # Total!!$200,000 or more
-                ], key=api_key)
-        ## ATTN! BELOW ARE TABULATION VALUES FOR TARGET CENSUS TRACT.
-        TRACT_DATA = {
-                "tractid": census_vals['tract_id'], 
-                "countyid": census_vals['county_id'], 
-                "stateid": census_vals['state_id'], 
-                "landarea": census_vals['land_area'], 
-                "tractpop100": census_vals['tract_pop'],
-                "Total respondents": data.B19001_001E,
-                "Income < $10000" : 10000 * data.B19001_002E,
-                "Income ~ $12500" : 12500 * data.B19001_003E,
-                "Income ~ $17500" : 17500 * data.B19001_004E,
-                "Income ~ $22500" : 22500 * data.B19001_005E,
-                "Income ~ $27500" : 27500 * data.B19001_006E,
-                "Income ~ $32500" : 32500 * data.B19001_007E,
-                "Income ~ $37500" : 37500 * data.B19001_008E,
-                "Income ~ $42500" : 42500 * data.B19001_009E,
-                "Income ~ $47500" : 47500 * data.B19001_010E,
-                "Income ~ $55000" : 55000 * data.B19001_011E,
-                "Income ~ $67500" : 67500 * data.B19001_012E,
-                "Income ~ $87500" : 87500 * data.B19001_013E,
-                "Income ~ $112500": 112500 * data.B19001_014E,
-                "Income ~ $137500": 137500 * data.B19001_015E,
-                "Income ~ $175000": 175000 * data.B19001_016E,
-                "Income > $200000": 200000 * data.B19001_017E
+        try:
+            json = self.JSON_DATA['LOCATION']['json']
+            tract_id = json['result']['addressMatches'][0]\
+                ['geographies']['Census Tracts'][0]['TRACT']
+            county_id = json['result']['addressMatches'][0]\
+                ['geographies']['Census Tracts'][0]['COUNTY']
+            state_id = json['result']['addressMatches'][0]\
+                ['geographies']['Census Tracts'][0]['STATE']
+            land_area = json['result']['addressMatches'][0]\
+                ['geographies']['Census Tracts'][0]['AREALAND']
+            population = json['result']['addressMatches'][0]\
+                ['geographies']['Census Tracts'][0]['POP100']
+            census_vals = {
+                "tract_id": tract_id, "county_id": county_id, 
+                "state_id": state_id, "land_area": land_area, 
+                "tract_pop": population
                 }
-        ## ATTN! BELOW ARE CALCULATIONS FOR AVG INCOME PER TRACT 'POP100' 
-        AVG_INCOME = float((
-            (10000 * data.B19001_002E) + (12500 * data.B19001_003E) 
-            + (17500 * data.B19001_004E) + (22500 * data.B19001_005E) 
-            + (27500 * data.B19001_006E) + (32500 * data.B19001_007E) 
-            + (37500 * data.B19001_008E) + (42500 * data.B19001_009E) 
-            + (47500 * data.B19001_010E) + (55000 * data.B19001_011E) 
-            + (67500 * data.B19001_012E) + (87500 * data.B19001_013E)
-            + (112500 * data.B19001_014E) + (137500 * data.B19001_015E) 
-            + (175000 * data.B19001_016E) + (200000 * data.B19001_017E)) 
-            / TRACT_DATA['tractpop100'])
-        ## ATTN! BELOW ARE CALCULATIONS FOR DYNAMIC SEARCH RADIUS
-        pop = TRACT_DATA['tractpop100']
-        fsRadius = (((area/pop)/ 3.14)**3
-                    +(AVG_INCOME/pop)**3)**(1/2.5)+1000.00
-        if fsRadius > 50000.00: 
-            radius = 50000.00
-        elif fsRadius < 1000.00: 
-            radius = 1000.00
-        else: 
-            radius = fsRadius
-        TRACT_DATA["AVG_INCOME"] = AVG_INCOME
-        TRACT_DATA["RADIUS"] = radius
-        print("Search radius:", radius)
+            print("Census data found...")
+            api_key = self.CREDENTIALS['censuskey']
+            area= float(census_vals['land_area'])
+            geo = censusdata.censusgeo(
+                [('state', str(census_vals['state_id'])),
+                ('county', str(census_vals['county_id'])),
+                ('tract', str(census_vals['tract_id']))]
+            )
+            ## ATTN! BELOW ARE CENSUS TABLE CODES WITH CORRESPONDING TITLES.
+            data = censusdata.download(
+                'acs5', 2015, geo,
+                    [
+                        'B19001_001E',  # Total!!Respondents
+                        'B19001_002E',  # Total!!Less than $10,000
+                        'B19001_003E',  # Total!!$10,000 to $14,999
+                        'B19001_004E',  # Total!!$15,000 to $19,999
+                        'B19001_005E',  # Total!!$20,000 to $24,999
+                        'B19001_006E',  # Total!!$25,000 to $29,999
+                        'B19001_007E',  # Total!!$30,000 to $34,999
+                        'B19001_008E',  # Total!!$35,000 to $39,999
+                        'B19001_009E',  # Total!!$40,000 to $44,999
+                        'B19001_010E',  # Total!!$45,000 to $49,999
+                        'B19001_011E',  # Total!!$50,000 to $59,999
+                        'B19001_012E',  # Total!!$60,000 to $74,999
+                        'B19001_013E',  # Total!!$75,000 to $99,999
+                        'B19001_014E',  # Total!!$100,000 to $124,999
+                        'B19001_015E',  # Total!!$125,000 to $149,999
+                        'B19001_016E',  # Total!!$150,000 to $199,999
+                        'B19001_017E'   # Total!!$200,000 or more
+                    ], key=api_key)
+            ## ATTN! BELOW ARE TABULATION VALUES FOR TARGET CENSUS TRACT.
+            TRACT_DATA = {
+                    "tractid": census_vals['tract_id'], 
+                    "countyid": census_vals['county_id'], 
+                    "stateid": census_vals['state_id'], 
+                    "landarea": census_vals['land_area'], 
+                    "tractpop100": census_vals['tract_pop'],
+                    "Total respondents": data.B19001_001E,
+                    "Income < $10000" : 10000 * data.B19001_002E,
+                    "Income ~ $12500" : 12500 * data.B19001_003E,
+                    "Income ~ $17500" : 17500 * data.B19001_004E,
+                    "Income ~ $22500" : 22500 * data.B19001_005E,
+                    "Income ~ $27500" : 27500 * data.B19001_006E,
+                    "Income ~ $32500" : 32500 * data.B19001_007E,
+                    "Income ~ $37500" : 37500 * data.B19001_008E,
+                    "Income ~ $42500" : 42500 * data.B19001_009E,
+                    "Income ~ $47500" : 47500 * data.B19001_010E,
+                    "Income ~ $55000" : 55000 * data.B19001_011E,
+                    "Income ~ $67500" : 67500 * data.B19001_012E,
+                    "Income ~ $87500" : 87500 * data.B19001_013E,
+                    "Income ~ $112500": 112500 * data.B19001_014E,
+                    "Income ~ $137500": 137500 * data.B19001_015E,
+                    "Income ~ $175000": 175000 * data.B19001_016E,
+                    "Income > $200000": 200000 * data.B19001_017E
+                    }
+            ## ATTN! BELOW ARE CALCULATIONS FOR AVG INCOME PER TRACT 'POP100' 
+            AVG_INCOME = float((
+                (10000 * data.B19001_002E) + (12500 * data.B19001_003E) 
+                + (17500 * data.B19001_004E) + (22500 * data.B19001_005E) 
+                + (27500 * data.B19001_006E) + (32500 * data.B19001_007E) 
+                + (37500 * data.B19001_008E) + (42500 * data.B19001_009E) 
+                + (47500 * data.B19001_010E) + (55000 * data.B19001_011E) 
+                + (67500 * data.B19001_012E) + (87500 * data.B19001_013E)
+                + (112500 * data.B19001_014E) + (137500 * data.B19001_015E) 
+                + (175000 * data.B19001_016E) + (200000 * data.B19001_017E)) 
+                / TRACT_DATA['tractpop100'])
+            ## ATTN! BELOW ARE CALCULATIONS FOR DYNAMIC SEARCH RADIUS
+            pop = TRACT_DATA['tractpop100']
+            fsRadius = (((area/pop)/ 3.14)**3
+                        +(AVG_INCOME/pop)**3)**(1/2.5)+1000.00
+            if fsRadius > 50000.00: 
+                radius = 50000.00
+            elif fsRadius < 1000.00: 
+                radius = 1000.00
+            else: 
+                radius = fsRadius
+            TRACT_DATA["AVG_INCOME"] = AVG_INCOME
+            TRACT_DATA["RADIUS"] = radius
+            print("Dynamic radius selected:", radius)
+        except:
+            traceback.print_exc()
+            TRACT_DATA = {"RADIUS" : 4250}
+            print("Error! Default radius selected:", TRACT_DATA["RADIUS"])
         return TRACT_DATA
+
     
     def getVenues(self, latlng=None, query="", radius=None,  
                   intent="browse", limit=50, 
@@ -339,14 +357,22 @@ class VipDt:
         See the Foursquare API docs for more details on query parameters.
         """
         if radius is None:
-            # radius = self.TRACT_DATA['RADIUS']
             radius = self.QUERY_SUMMARIES['TRACT']['RADIUS']
         if isinstance(latlng,str):
             ll = latlng
+        ## Below here is where to exception handle for geopy 'location.raw'.
         else:
-            coords = tuple(self.JSON_DATA['LOCATION']['json']['result']\
-                ['addressMatches'][0]['coordinates'].values())
-            ll = ("{},{}").format(coords[1],coords[0])
+            try:
+                ## fetches coords from censusgeo results
+                coords = tuple(self.JSON_DATA['LOCATION']['json']['result']\
+                    ['addressMatches'][0]['coordinates'].values())
+                ll = ("{},{}").format(coords[1],coords[0])
+            except (KeyError, IndexError):
+                ## fetches lat/lon values from geopyGeo results if above not present
+                self.JSON_DATA['LOCATION'] = VipDt.getGeopyGeo(self)
+                lat = self.JSON_DATA['LOCATION']['json']['lat']
+                lon = self.JSON_DATA['LOCATION']['json']['lon']
+                ll = ("{},{}").format(lat, lon)
         if categories is None:
             ## 'Nightlife' CATEGORY ID  : "4d4b7105d754a06376d81259"
             ## 'Food' CATEGORY ID       : '4d4b7105d754a06374d81259' 
@@ -460,6 +486,7 @@ class VipDt:
         Indicates whether to output the venue location map as an html.
         """
         venue_data = self.JSON_DATA['VENUES']
+        ## below is where venues map breaks with alt location method
         search_address = self.JSON_DATA['LOCATION']['json']['result']\
             ['addressMatches'][0]['matchedAddress']
         search_lat = self.JSON_DATA['LOCATION']['json']['result']\
@@ -540,7 +567,8 @@ class VipDt:
         print("Menu query operation complete!")
         return #menus
 
-    def setMenusDf(self, records=None, drop_na=False, iter_limit=None, drop_menus_with=[]):
+    def setMenusDf(self, records=None, drop_na=False, \
+        iter_limit=None, drop_menus_with=[]):
         """
         Description
         -----------
@@ -556,6 +584,9 @@ class VipDt:
 
         iter_limit: int;  
         Maximum number of observations per dataframe. 'None' by default.
+
+        drop_menus_with: list;  
+        A list of strings by which to filter out menus containing those strings.
         """
         if records is None:
             records = self.JSON_DATA['MENUS']
@@ -638,7 +669,7 @@ class VipDt:
             print("Error! Failed to create dataframe.")
             pass
 
-    def getMenuStats(self, menus=None, confidence=0.99):
+    def getMenuStats(self, menus=None, confidence=0.98):
         """
         Description
         -----------
@@ -650,23 +681,24 @@ class VipDt:
         A list of menu query json responses.
 
         confidence: float;  
-        A confidence interval between 0 and 1 for 'bayes_mvs' method.
+        A 'bayes_mvs' method confidence interval between 0 and 1. Default value: 0.98.
         """
         menu_df = self.QUERY_SUMMARIES['MENUS']
         if menus is not None:
             menu_df = menus
         menu_data = menu_df[['venue_name', 'menu_name', 'section_name', \
             'item_name', 'item_desc', 'item_price']]
-        # menu_data['item_price'] = menu_data['item_price'].astype('float64')
-        # menu_data['item_price'].astype('float64', inplace=True)
         menu_data = menu_data.dropna()
         menu_desc = menu_data.groupby(['menu_name']).describe()
         explore_menus = menu_data.groupby(
             ['venue_name', 'menu_name', 'section_name']).describe()
         items = menu_data['item_price']
         bayes_stats = scipy.stats.bayes_mvs(items, alpha=confidence)
-        menuStats = {"menu_items": menu_data, "menu_desc": menu_desc, 
-                    "explore_menus": explore_menus, "bayes_mvs": bayes_stats}
+        menuStats = {
+            "bayes_mvs": bayes_stats,
+            "menu_desc": menu_desc, 
+            "explore_menus": explore_menus
+            }
         self.QUERY_SUMMARIES['STATS'] = menuStats
         return menuStats
 
@@ -730,7 +762,7 @@ class VipDt:
         Parameters
         ----------
         sheets: dict;  
-        A dict of dataframe objects from 'FS_SUMMARIES['STATS']'.
+        A dict of dataframe objects from 'QUERY_SUMMARIES'.
         """
         if sheets is None:
             sheets = self.QUERY_SUMMARIES['STATS']
@@ -752,7 +784,7 @@ class VipDt:
         return
 
     @staticmethod
-    def start(address=None, credentials=None):
+    def start(address=None, credentials=None, get_menus=False):
         """
         Description
         -----------
@@ -765,9 +797,13 @@ class VipDt:
 
         credentials: dict;  
         Key-value pairs for the following credentials: 
-            {"fsid": "Valid Foursquare client Id",  
+            "fsid": "Valid Foursquare client Id",  
             "fssecret" : "Valid Foursquare client secret",  
-            "censuskey" : "Valid US Census API Key"}
+            "censuskey" : "Valid US Census API Key"  
+        
+        get_menus: bool;  
+        Set 'True' to include a subsequent menu query procedure. 
+        'False' by default.
         """
         if address is None:
             address = input("Enter address here:") 
@@ -781,43 +817,24 @@ class VipDt:
                 client.getVenues()
                 client.setVenuesDf()
                 client.getVenuesMap()
-                try:
-                    ## MENUS
-                    client.getMenus()
-                    client.setMenusDf()
-                    client.getMenuStats()
-                    client.setPickle()
-                    client.setJson()
-                    print("Procedure complete!")
-                except:
-                    print('Menus failed! Procedure incomplete.')
-                    pass
+                if get_menus is True:
+                    try:
+                        ## MENUS
+                        client.getMenus()
+                        client.setMenusDf()
+                        client.getMenuStats()
+                        client.setPickle()
+                        client.setJson()
+                        print("Procedure complete!")
+                        return client.QUERY_SUMMARIES['MENUS']
+                    except:
+                        print('Menus failed! Procedure incomplete.')
+                        pass
+                else:
+                    return client.QUERY_SUMMARIES['VENUES']
             except:
                 print('Venues failed!')
                 pass
         except:
             print('Initialization failed! Procedure aborted.')
             pass
-
-
-"""
-EXAMPLES OF INTERACTING WITH THIS MODULE:
---------------------------------------------
-## IMPORT CLASS MODULE
-import VipDt as vd
-
-## CREATE CLASS OBJECT
-dt = vd(address, credentials)
-
-## QUERY LOCATION FOR VENUES
-dt.getVenues()
-
-## QUERY VENUES FOR MENUS
-dt.getMenus()
-
-## EXAMINE QUERY RESULTS
-dt.getVenuesMap()
-dt.setVenuesDf()
-dt.setMenusDf()
-dt.getMenuStats()
-"""
