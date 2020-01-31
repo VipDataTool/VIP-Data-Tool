@@ -55,7 +55,7 @@ class VipDt:
     credentials: dict;  
     Key-value pairs include the following credentials: 
         "fsid": "Valid Foursquare Client Id",
-        "fssecret" : "Valid Foursquare Client Secret",
+        "fssecret"  : "Valid Foursquare Client Secret",
         "censuskey" : "Valid US Census API Key"
     
     How To Use
