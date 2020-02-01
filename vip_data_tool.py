@@ -40,7 +40,7 @@ pd.set_option('display.max_columns', 50)
 print("Dependencies imported.")
 
 
-class VipDt:
+class VipData:
     """
     Description
     -----------
@@ -60,7 +60,7 @@ class VipDt:
     
     How To Use
     ----------
-        1) import VipDt as vd           # IMPORT CLASS MODULE
+        1) import VipData as vd           # IMPORT CLASS MODULE
         2) dt=vd(address,credentials)   # INSTANTIATE CLASS OBJECT
         3) dt.getVenues()               # QUERY LOCATION FOR VENUES
         4) dt.getMenus()                # QUERY VENUES FOR MENUS
@@ -108,64 +108,44 @@ class VipDt:
                 ],
             "CATEGORIES":{
                 "4d4b7104d754a06370d81259": [
-                    "Arts & Entertainment", 
-                    "glyphicon glyphicon-music",
-                    "darkblue"
+                    "Arts & Entertainment", "glyphicon glyphicon-music", "darkblue"
                     ],
                 "4d4b7105d754a06372d81259": [
-                    "College & University", 
-                    "glyphicon glyphicon-pencil",
-                    "orange"
+                    "College & University", "glyphicon glyphicon-pencil", "orange"
                     ],
                 "4d4b7105d754a06373d81259": [
-                    "Event", 
-                    "glyphicon glyphicon-calendar",
-                    "purple"
+                    "Event", "glyphicon glyphicon-calendar", "purple"
                     ],
                 "4d4b7105d754a06374d81259": [
-                    "Food", 
-                    "glyphicon glyphicon-cutlery",
-                    "red"
+                    "Food", "glyphicon glyphicon-cutlery", "red"
                     ],
                 "4d4b7105d754a06376d81259": [
-                    "Nightlife Spot", 
-                    "glyphicon glyphicon-glass",
-                    "blue"
+                    "Nightlife Spot", "glyphicon glyphicon-glass", "blue"
                     ],
                 "4d4b7105d754a06377d81259": [
-                    "Outdoors & Recreation", 
-                    "glyphicon glyphicon-tree-conifer",
-                    "green"
+                    "Outdoors & Recreation", "glyphicon glyphicon-tree-conifer", "green"
                     ],
                 "4d4b7105d754a06375d81259": [
-                    "Professional & Other Places", 
-                    "glyphicon glyphicon-envelope",
-                    "lightgray"
+                    "Professional & Other Places", "glyphicon glyphicon-envelope", "lightgray"
                     ],
                 "4e67e38e036454776db1fb3a": [
-                    "Residence", 
-                    "glyphicon glyphicon-home",
-                    "gray"
+                    "Residence", "glyphicon glyphicon-home", "gray"
                     ],
                 "4d4b7105d754a06378d81259": [
-                    "Shop & Service", 
-                    "glyphicon glyphicon-shopping-cart",
-                    "pink"
+                    "Shop & Service", "glyphicon glyphicon-shopping-cart", "pink"
                     ],
                 "4d4b7105d754a06379d81259": [
-                    "Travel & Transport", 
-                    "glyphicon glyphicon-plane",
-                    "cadetblue"
+                    "Travel & Transport", "glyphicon glyphicon-plane", "cadetblue"
                     ]
                 }
             }
         try:
-            self.JSON_DATA['LOCATION'] = VipDt.getCensusGeo(self)
+            self.JSON_DATA['LOCATION'] = VipData.getCensusGeo(self)
         except:
             print("Error with 'getCensusGeo()'! 'getGeopyGeo()' method selected.")
-            self.JSON_DATA['LOCATION'] = VipDt.getGeopyGeo(self)
+            self.JSON_DATA['LOCATION'] = VipData.getGeopyGeo(self)
         try:
-            self.QUERY_SUMMARIES['TRACT'] = VipDt.getTractValues(self)
+            self.QUERY_SUMMARIES['TRACT'] = VipData.getTractValues(self)
         except:
             print("Error! 'getTractValues' method failed!")
             pass
@@ -388,7 +368,7 @@ class VipDt:
                 ll = ("{},{}").format(coords[1],coords[0])
             except (KeyError, IndexError):
                 ## fetches lat/lon values from geopyGeo results if above not present
-                self.JSON_DATA['LOCATION'] = VipDt.getGeopyGeo(self)
+                self.JSON_DATA['LOCATION'] = VipData.getGeopyGeo(self)
                 lat = self.JSON_DATA['LOCATION']['json']['lat']
                 lon = self.JSON_DATA['LOCATION']['json']['lon']
                 ll = ("{},{}").format(lat, lon)
@@ -827,10 +807,10 @@ class VipDt:
         if address is None:
             address = input("Enter address here:") 
         if credentials is None:
-            credentials = VipDt.getJsonTokens()
+            credentials = VipData.getJsonTokens()
         try:
             ## INITIALIZATION
-            client = VipDt(address, credentials)
+            client = VipData(address, credentials)
             try:
                 ## VENUES
                 client.getVenues()
