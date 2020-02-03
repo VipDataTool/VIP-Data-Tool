@@ -469,7 +469,7 @@ class VipData:
             venue_list, index=None, exclude=None, coerce_float=False, 
             columns=['venue_name',"venue_id",'category_idn', 'venue_address', \
                 'venue_lat', 'venue_lng', "venue_referral_id", "delivery_provider", 
-                "delivery_url"])
+                "delivery_url", "attribution_link"])
         self.QUERY_SUMMARIES['VENUES'] = df
         return df
 
