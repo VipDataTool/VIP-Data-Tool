@@ -41,7 +41,7 @@ VipDt.setJson()*
 VipDt.getJson()
 
 VipDt.getJsonTokens()  
-VipDt.start() # This method simply batch performs a collection of the above methods marked with an asterisk.  
+VipDt.start() # This method simply batches a collection of the above methods marked with an asterisk.  
   
 CONCLUSIONS:  
 I thank me for my time and effort! Special thanks to my crew for the extra creatine and spray tans.
