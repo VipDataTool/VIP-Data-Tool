@@ -22,28 +22,26 @@ The resulting instance can then be treated as a client for querying venue inform
 
 A localized map can be generated from the venue data, as well as dataframes of the subsequent demographic, venue and menu data for further reference or analysis.  
   
-Instances can be 'pickled', however the Folium objects cannot, but thankfully, maps can easily be regenerated upon deserialization.  
+Unprocessed query data can be serialized as a JSON file if necessary. Instances can be 'pickled', however any embedded Folium objects cannot.  
   
-USER DICTIONARY OBJECTS:  
-VipDt.LOCATION  
-VipDt.FS_JSON  
-VipDt.FS_SUMMARIES  
-VipDt.FS_STATS  
+I also included a simple static method titled 'VipDt.getJsonTokens()' for retrieving one's credentials from a json document titled "certificate" located in the directory of the script. This method is far from a secure means of storing one's user credentials, and only intended to be used as a very short-term solution in a secure environment. Be sure to '.gitignore' this file if you intend to use this method as to avoid publishing your private API credentials on a public repository.  
+  
+USER DATA OBJECTS:  
+VipDt.JSON_DATA  
+VipDt.REPORTS  
   
 USER METHODS:  
 VipDt.getVenues()*  
-VipDt.getVenuesMap()*  
+VipDt.setVenuesMap()*  
 VipDt.setVenuesDf()*  
 VipDt.getMenus()*  
 VipDt.setMenusDf()*  
 VipDt.getMenuStats()*  
 VipDt.setJson()*  
-VipDt.getJson()  
-VipDt.setPickle()*  
-VipDt.getPickle()  
-VipDt.start() # Essentially batch performs a collection of the above methods marked with an asterisk  
+VipDt.getJson()
+
+VipDt.getJsonTokens()  
+VipDt.start() # This method simply batch performs a collection of the above methods marked with an asterisk.  
   
-I also included a simple static method titled 'VipDt.getJsonTokens()' for retrieving one's credentials from a json document titled "certificate" located in the directory of the script. This method is far from a secure means of storing one's user credentials, and only intended to be used as a very short-term solution in a secure environment. Be sure to '.gitignore' this file if you intend to use this method as to avoid publishing your private API credentials on a public repository.
-  
-CONCLUSION:  
+CONCLUSIONS:  
 I thank me for my time and effort! Special thanks to my crew for the extra creatine and spray tans.

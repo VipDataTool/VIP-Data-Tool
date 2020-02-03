@@ -60,12 +60,12 @@ class VipData:
     
     How To Use
     ----------
-        1) import VipData as vd           # IMPORT CLASS MODULE
+        1) import VipData as vd         # IMPORT CLASS MODULE
         2) dt=vd(address,credentials)   # INSTANTIATE CLASS OBJECT
         3) dt.getVenues()               # QUERY LOCATION FOR VENUES
         4) dt.getMenus()                # QUERY VENUES FOR MENUS
         5) dt.setJson()                 # STORE QUERY DATA IN LOCAL JSON FILE
-        5) dt.getVenuesMap()            # CREATE VENUE LOCATION MAP
+        5) dt.setVenuesMap()            # CREATE VENUE LOCATION MAP
         6) dt.setVenuesDf()             # CREATE DATAFRAME FROM VENUES
         7) dt.setMenusDf()              # CREATE DATAFRAME FROM MENUS
         8) dt.getMenuStats()            # CREATE STATS PKG FROM DATA
@@ -86,7 +86,7 @@ class VipData:
             'VENUES': None, 
             'MENUS': None
             }
-        self.QUERY_SUMMARIES = {
+        self.REPORTS = {
             'TRACT': {}, 
             'VENUES':None, 
             'MENUS':None, 
@@ -145,7 +145,7 @@ class VipData:
             print("Error with 'getCensusGeo()'! 'getGeopyGeo()' method selected.")
             self.JSON_DATA['LOCATION'] = VipData.getGeopyGeo(self)
         try:
-            self.QUERY_SUMMARIES['TRACT'] = VipData.getTractValues(self)
+            self.REPORTS['TRACT'] = VipData.getTractValues(self)
         except:
             print("Error! 'getTractValues' method failed!")
             pass
@@ -357,7 +357,7 @@ class VipData:
         See the Foursquare API docs for more details on query parameters.
         """
         if radius is None:
-            radius = self.QUERY_SUMMARIES['TRACT']['RADIUS']
+            radius = self.REPORTS['TRACT']['RADIUS']
         if isinstance(latlng,str):
             ll = latlng
         else:
@@ -470,10 +470,10 @@ class VipData:
             columns=['venue_name',"venue_id",'category_idn', 'venue_address', \
                 'venue_lat', 'venue_lng', "venue_referral_id", "delivery_provider", 
                 "delivery_url", "attribution_link"])
-        self.QUERY_SUMMARIES['VENUES'] = df
+        self.REPORTS['VENUES'] = df
         return df
 
-    def getVenuesMap(self, save_map=True):
+    def setVenuesMap(self, save_map=True):
         """
         Description
         -----------
@@ -525,7 +525,7 @@ class VipData:
                         icon= venue_icon,
                         color= venue_icon_color)
                     ).add_to(m)
-        self.QUERY_SUMMARIES['MAP'] = m
+        self.REPORTS['MAP'] = m
         if save_map == True:
             m.save(self.OUTPUT_LABELS['foliumLabel'])
         return m
@@ -661,7 +661,7 @@ class VipData:
                         else:
                             pass
                 df.drop(filter_index_list, inplace=True)
-            self.QUERY_SUMMARIES['MENUS'] = df
+            self.REPORTS['MENUS'] = df
             return df
         except TypeError:
             traceback.print_exc
@@ -682,7 +682,7 @@ class VipData:
         confidence: float;  
         A 'bayes_mvs' method confidence interval between 0 and 1. Default value: 0.98.
         """
-        menu_df = self.QUERY_SUMMARIES['MENUS']
+        menu_df = self.REPORTS['MENUS']
         if menus is not None:
             menu_df = menus
         menu_data = menu_df[['venue_name', 'menu_name', 'section_name', \
@@ -698,7 +698,7 @@ class VipData:
             "menu_desc": menu_desc, 
             "explore_menus": explore_menus
             }
-        self.QUERY_SUMMARIES['STATS'] = menuStats
+        self.REPORTS['STATS'] = menuStats
         return menuStats
 
     def setJson(self):
@@ -761,10 +761,10 @@ class VipData:
         Parameters
         ----------
         sheets: dict;  
-        A dict of dataframe objects from 'QUERY_SUMMARIES'.
+        A dict of dataframe objects from 'REPORTS'.
         """
         if sheets is None:
-            sheets = self.QUERY_SUMMARIES['STATS']
+            sheets = self.REPORTS['STATS']
         sheet_file_name = self.OUTPUT_LABELS['xlLabel']
         with pd.ExcelWriter(sheet_file_name) as writer:
             for item in sheets:
@@ -815,7 +815,7 @@ class VipData:
                 ## VENUES
                 client.getVenues()
                 client.setVenuesDf()
-                client.getVenuesMap()
+                client.setVenuesMap()
                 if get_menus is True:
                     try:
                         ## MENUS
@@ -825,12 +825,12 @@ class VipData:
                         client.setPickle()
                         client.setJson()
                         print("Procedure complete!")
-                        return client.QUERY_SUMMARIES['MENUS']
+                        return client.REPORTS['MENUS']
                     except:
                         print('Menus failed! Procedure incomplete.')
                         pass
                 else:
-                    return client.QUERY_SUMMARIES['VENUES']
+                    return client.REPORTS['VENUES']
             except:
                 print('Venues failed!')
                 pass
