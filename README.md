@@ -24,24 +24,24 @@ A localized map can be generated from the venue data, as well as dataframes of t
   
 Unprocessed query data can be serialized as a JSON file if necessary. Instances can be 'pickled', however any embedded Folium objects cannot.  
   
-I also included a simple static method titled 'VipDt.getJsonTokens()' for retrieving one's credentials from a json document titled "certificate" located in the directory of the script. This method is far from a secure means of storing one's user credentials, and only intended to be used as a very short-term solution in a secure environment. Be sure to '.gitignore' this file if you intend to use this method as to avoid publishing your private API credentials on a public repository.  
+I also included a simple static method titled 'VipData.getJsonTokens()' for retrieving one's credentials from a json document titled "certificate" located in the directory of the script. This method is far from a secure means of storing one's user credentials, and only intended to be used as a very short-term solution in a secure environment. Be sure to '.gitignore' this file if you intend to use this method as to avoid publishing your private API credentials on a public repository.  
   
 USER DATA OBJECTS:  
 VipDt.JSON_DATA  
 VipDt.REPORTS  
   
 USER METHODS:  
-VipDt.getVenues()*  
-VipDt.setVenuesMap()*  
-VipDt.setVenuesDf()*  
-VipDt.getMenus()*  
-VipDt.setMenusDf()*  
-VipDt.getMenuStats()*  
-VipDt.setJson()*  
-VipDt.getJson()
+VipData.getVenues()*  
+VipData.setVenuesMap()*  
+VipData.setVenuesDf()*  
+VipData.getMenus()*  
+VipData.setMenusDf()*  
+VipData.getMenuStats()*  
+VipData.setJson()*  
+VipData.getJson()
 
-VipDt.getJsonTokens()  
-VipDt.start() # This method simply batches a collection of the above methods marked with an asterisk.  
+VipData.getJsonTokens()  
+VipData.start() # This method simply batches a collection of the above methods marked with an asterisk.  
   
 CONCLUSIONS:  
 I thank me for my time and effort! Special thanks to my crew for the extra creatine and spray tans.
