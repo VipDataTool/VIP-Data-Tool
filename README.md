@@ -27,8 +27,8 @@ Unprocessed query data can be serialized as a JSON file if necessary. Instances 
 I also included a simple static method titled 'VipData.getJsonTokens()' for retrieving one's credentials from a json document titled "certificate" located in the directory of the script. This method is far from a secure means of storing one's user credentials, and only intended to be used as a very short-term solution in a secure environment. Be sure to '.gitignore' this file if you intend to use this method as to avoid publishing your private API credentials on a public repository.  
   
 USER DATA OBJECTS:  
-VipDt.JSON_DATA  
-VipDt.REPORTS  
+VipData.JSON_DATA  
+VipData.REPORTS  
   
 USER METHODS:  
 VipData.getVenues()*  
