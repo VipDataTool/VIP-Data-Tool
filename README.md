@@ -3,7 +3,7 @@
 A Very Important Data Tool For Very Important Data Tools!
 
 PURPOSE:  
-LListen up! I'M VERY IMPORTANT. MY TIME IS VALUABLE. I'M A BIG DEAL! So when I demand data, I get data! That's why I made this very superior, very important data tool for me and my bro's to use when looking for new clubs and bars and stuff. It can also be used to aggregate location-based venue data for market research and competitor analysis. 
+Listen up! I'M VERY IMPORTANT. MY TIME IS VALUABLE. I'M A BIG DEAL! So when I demand data, I get data! That's why I made this very superior, very important data tool for me and my bro's to use when looking for new clubs and bars and stuff. It can also be used to aggregate location-based venue data for market research and competitor analysis. 
   
 DESCRIPTION:  
 V.I.P. stands for "Venues in Places" referring to the Foursquare 'Places' API. A description of the endpoint can be found here: <https://developer.foursquare.com/docs/api>  
