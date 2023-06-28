@@ -24,24 +24,21 @@ A localized map can be generated from the venue data, as well as dataframes of t
   
 Unprocessed query data can be serialized as a JSON file if necessary. Instances can be 'pickled', however any embedded Folium objects cannot.  
   
-I included a simple static method titled 'getJson()' for retrieving one's credentials from a json document titled "certificate,json" located in the root directory of the script. This method is FAR from a secure method of storing one's user credentials, and is only intended to be used as a very short-term solution in a secure environment. Be sure to '.gitignore' this file if you intend to use this method as to avoid publishing your private API credentials on a public repository. For those looking to implement this library in a production environment, I highly recommend storing these credentials as environmental variables and refactoring the provided method as necessary using os.getenv(). Use at your own risk!!
+I included a simple static method titled 'getJsonTokens()' for retrieving one's credentials from a json document titled "certificate,json" located in the root directory of the script. This method is FAR from a secure method of storing one's user credentials, and is only intended to be used as a very short-term solution in a secure environment. Be sure to '.gitignore' this file if you intend to use this method as to avoid publishing your private API credentials on a public repository. For those looking to implement this library in a production environment, I highly recommend storing these credentials as environmental variables and refactoring the provided method as necessary using os.getenv(). Use at your own risk!!
   
 USER DATA OBJECTS:  
-VipData.JSON_DATA  
-VipData.REPORTS  
+VipData.JSON_DATA - Contains user-defined variables.
+VipData.REPORTS - Contains derived data products.
   
 USER METHODS:  
-VipData.getVenues()*  
-VipData.setVenuesMap()*  
-VipData.setVenuesDf()*  
-VipData.getMenus()*  
-VipData.setMenusDf()*  
-VipData.getMenuStats()*  
-VipData.setJson()*  
-VipData.getJson()
+VipData.getVenues()* - Assembles a list of nearby venues approximate to a given address.
+VipData.setVenuesMap()* - Generates a folium map of nearby venues.
+VipData.setVenuesDf()* - Assembles a dataframe of nearby venue data.
+VipData.getMenus()* - Parses venue data to isolate menu data.
+VipData.setMenusDf()* - Aggregates a dataframe of venue menu data.
+VipData.getMenuStats()* - Aggregates a statistical summary of venue menu data.
+VipData.setJson()* - Redefines JSON_DATA class variable.
+VipData.getJson() - Retrieves JSON-DATA class variable.
 
-VipData.getJsonTokens()  
+VipData.getJsonTokens() - A simple method for retrieving user credentials for the foursquare, census bureau and nominatim api endpoints.
 VipData.start() # This method simply batches a collection of the above methods marked with an asterisk.  
-  
-CONCLUSIONS:  
-I thank me for my time and effort! Special thanks to my crew for the extra creatine and spray tans.
