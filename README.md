@@ -1,7 +1,5 @@
 # VIP DATA TOOL
 
-A Very Important Data Tool For Very Important Data Tools!
-
 PURPOSE:  
 I made this application to aggregate location-based venue data for restaurateurs interested in performing independent market research and location-based competitor analysis. 
   
